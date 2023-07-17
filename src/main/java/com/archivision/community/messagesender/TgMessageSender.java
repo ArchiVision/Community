@@ -1,7 +1,7 @@
 package com.archivision.community.messagesender;
 
 
-import com.archivision.community.bot.BroadcasterBot;
+import com.archivision.community.bot.CommunityBot;
 import com.archivision.community.exception.bot.UnableSendMessageException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class TgMessageSender implements MessageSender {
     @Lazy
     @Autowired
-    private BroadcasterBot broadcasterBot;
+    private CommunityBot communityBot;
 
     @Override
     public void sendTextMessage(String userId, String message) {
@@ -29,7 +29,7 @@ public class TgMessageSender implements MessageSender {
     public void sendMessage(SendMessage message) {
         try {
             log.info("Sending message to={}", message.getChatId());
-            broadcasterBot.execute(message);
+            communityBot.execute(message);
         } catch (TelegramApiException e) {
             throw new UnableSendMessageException("Unable to send a message", e);
         }
@@ -37,7 +37,7 @@ public class TgMessageSender implements MessageSender {
 
     private void executeSendMessage(String userId, String message) {
         try {
-            broadcasterBot.execute(SendMessage.builder()
+            communityBot.execute(SendMessage.builder()
                     .chatId(userId)
                     .text(message)
                     .build());

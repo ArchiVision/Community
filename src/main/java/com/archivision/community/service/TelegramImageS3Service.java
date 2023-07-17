@@ -1,6 +1,6 @@
 package com.archivision.community.service;
 
-import com.archivision.community.bot.BroadcasterBot;
+import com.archivision.community.bot.CommunityBot;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -20,11 +20,11 @@ public class TelegramImageS3Service {
     @Value("${amazon.s3.bucket-name}")
     private String avatarsBucketName;
 
-    private final BroadcasterBot broadcasterBot;
+    private final CommunityBot communityBot;
     private final S3Service s3Service;
 
-    public TelegramImageS3Service(@Lazy BroadcasterBot broadcasterBot, S3Service s3Service) {
-        this.broadcasterBot = broadcasterBot;
+    public TelegramImageS3Service(@Lazy CommunityBot communityBot, S3Service s3Service) {
+        this.communityBot = communityBot;
         this.s3Service = s3Service;
     }
 
@@ -39,7 +39,7 @@ public class TelegramImageS3Service {
         getFileRequest.setFileId(fileId);
         File execute = null;
         try {
-            execute = broadcasterBot.execute(getFileRequest);
+            execute = communityBot.execute(getFileRequest);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
             // TODO: 17.07.2023 custom exception
@@ -48,7 +48,7 @@ public class TelegramImageS3Service {
     }
 
     private String downloadFileByFilePath(String fileId, String userId) {
-        String fileUrl = String.format("https://api.telegram.org/file/bot%s/%s", broadcasterBot.getBotToken(), fileId);
+        String fileUrl = String.format("https://api.telegram.org/file/bot%s/%s", communityBot.getBotToken(), fileId);
         String fileName = "uploads/photos/avatar_" + userId + ".jpg";
         try (BufferedInputStream in = new BufferedInputStream(new URL(fileUrl).openStream());
              FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
