@@ -1,7 +1,7 @@
 telegram:
   bot:
-    username: none
-    token: none
+    username: commulinkbot
+    token: 6347574819:AAEOj937arRXFI78W44aFfAaw0qvmrj9v-M
 
 spring:
   data:
@@ -14,6 +14,6 @@ spring:
 
 amazon:
   s3:
-    access-key: none
-    secret-key: none
-    bucket-name: none
+    access-key: AKIASLAHI4MVD2Z4ZSOT
+    secret-key: 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
+    bucket-name: commulinkdata
