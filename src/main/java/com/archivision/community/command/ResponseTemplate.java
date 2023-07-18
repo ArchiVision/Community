@@ -17,6 +17,6 @@ public interface ResponseTemplate {
     String NAME_INPUT = "Твоє ім'я:";
     String CITY_INPUT = "Місто:";
     String TOPICS_INPUT = "Введи теми, якими ти цікавишся:";
-    String DESC_INPUT = "Місто:";
+    String DESC_INPUT = "Опціонально, розкажіть коротко про себе:";
     String APPROVE_INPUT = "Нічого не забув, все вірно?";
 }

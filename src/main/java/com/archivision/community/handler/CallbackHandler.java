@@ -15,6 +15,7 @@ public class CallbackHandler implements Handler<CallbackQuery> {
     private final MessageSender messageSender;
     private final TelegramImageS3Service telegramImageS3Service;
     public void handle(CallbackQuery callbackQuery) {
+        log.info("public void handle(CallbackQuery callbackQuery) {");
         if (callbackQuery.getData().contains("hello_btn")) {
             messageSender.sendMessage(SendMessage.builder()
                             .text("Your picture")
@@ -22,6 +23,5 @@ public class CallbackHandler implements Handler<CallbackQuery> {
                     .build());
             telegramImageS3Service.sendImageToUser(callbackQuery.getMessage().getChatId());
         }
-        log.info("callback");
     }
 }

@@ -1,7 +1,7 @@
 package com.archivision.community.document;
 
+import com.archivision.community.bot.State;
 import lombok.Data;
-import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -28,21 +28,4 @@ public class User {
 
     @DBRef
     private List<Topic> topics = new ArrayList<>();
-
-    @Getter
-    public enum State {
-        START("start"),
-        NAME("name"),
-        CITY("city"),
-        AGE("age"),
-        TOPIC("topic"),
-        DESCRIPTION("description"),
-        APPROVE("approve"),
-        MATCH("match");
-
-        private final String value;
-        State(String value) {
-            this.value = value;
-        }
-    }
 }

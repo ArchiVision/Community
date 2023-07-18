@@ -1,6 +1,6 @@
-package com.archivision.community.strategy.impl;
+package com.archivision.community.strategy.message.impl;
 
-import com.archivision.community.strategy.MessageStrategy;
+import com.archivision.community.strategy.message.MessageStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

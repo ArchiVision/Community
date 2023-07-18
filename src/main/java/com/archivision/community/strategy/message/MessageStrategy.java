@@ -1,4 +1,4 @@
-package com.archivision.community.strategy;
+package com.archivision.community.strategy.message;
 
 import org.telegram.telegrambots.meta.api.objects.Message;
 

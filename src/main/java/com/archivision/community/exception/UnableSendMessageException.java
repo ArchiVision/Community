@@ -1,4 +1,4 @@
-package com.archivision.community.exception.bot;
+package com.archivision.community.exception;
 
 public class UnableSendMessageException extends RuntimeException {
     public UnableSendMessageException(String message, Throwable cause) {

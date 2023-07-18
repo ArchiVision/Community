@@ -2,7 +2,7 @@ package com.archivision.community.messagesender;
 
 
 import com.archivision.community.bot.CommunityBot;
-import com.archivision.community.exception.bot.UnableSendMessageException;
+import com.archivision.community.exception.UnableSendMessageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

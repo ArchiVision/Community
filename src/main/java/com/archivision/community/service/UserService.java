@@ -1,5 +1,6 @@
 package com.archivision.community.service;
 
+import com.archivision.community.bot.State;
 import com.archivision.community.document.Topic;
 import com.archivision.community.document.User;
 import com.archivision.community.repo.TopicRepository;
@@ -39,7 +40,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void changeState(Long userId, User.State userState) {
+    public void changeState(Long userId, State userState) {
         Optional<User> byId = userRepository.findByTelegramUserId(userId);
         byId.ifPresentOrElse(user -> {
             user.setState(userState);
