@@ -1,6 +1,6 @@
 package com.archivision.community.bot;
 
-import com.archivision.community.receiver.UpdateReceiver;
+import com.archivision.community.processor.UpdateProcessor;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -12,12 +12,12 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Primary
 public class BotStarter {
     private final BotRegistrar botRegistrar;
-    private final BroadcasterBot broadcasterBot;
-    private final UpdateReceiver updateReceiver;
+    private final CommunityBot communityBot;
+    private final UpdateProcessor updateProcessor;
 
     @PostConstruct
     public void start() throws TelegramApiException {
-        broadcasterBot.setUpdateHandler(updateReceiver);
-        botRegistrar.register(broadcasterBot);
+        communityBot.setUpdateProcessor(updateProcessor);
+        botRegistrar.register(communityBot);
     }
 }

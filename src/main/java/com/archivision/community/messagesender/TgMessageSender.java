@@ -1,26 +1,21 @@
 package com.archivision.community.messagesender;
 
 
-import com.archivision.community.bot.BroadcasterBot;
+import com.archivision.community.bot.CommunityBot;
 import com.archivision.community.exception.bot.UnableSendMessageException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 @Slf4j
-@RequiredArgsConstructor
 public class TgMessageSender implements MessageSender {
-    @Lazy
-    @Autowired
-    private BroadcasterBot broadcasterBot;
+    private CommunityBot communityBot;
 
     @Override
-    public void sendTextMessage(String userId, String message) {
+    public void sendTextMessage(Long userId, String message) {
         log.info("Sending text message to={}", userId);
         executeSendMessage(userId, message);
     }
@@ -28,21 +23,25 @@ public class TgMessageSender implements MessageSender {
     @Override
     public void sendMessage(SendMessage message) {
         try {
-            log.info("Sending message to={}", message.getChatId());
-            broadcasterBot.execute(message);
+            communityBot.execute(message);
         } catch (TelegramApiException e) {
             throw new UnableSendMessageException("Unable to send a message", e);
         }
     }
 
-    private void executeSendMessage(String userId, String message) {
+    private void executeSendMessage(Long userId, String message) {
         try {
-            broadcasterBot.execute(SendMessage.builder()
+            communityBot.execute(SendMessage.builder()
                     .chatId(userId)
                     .text(message)
                     .build());
         } catch (TelegramApiException e) {
             throw new UnableSendMessageException("Unable to send a message", e);
         }
+    }
+
+    @Autowired
+    public void setCommunityBot(CommunityBot communityBot) {
+        this.communityBot = communityBot;
     }
 }
