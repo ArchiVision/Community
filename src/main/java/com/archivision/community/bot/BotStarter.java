@@ -17,7 +17,7 @@ public class BotStarter {
 
     @PostConstruct
     public void start() throws TelegramApiException {
-        communityBot.setUpdateHandler(updateProcessor);
+        communityBot.setUpdateProcessor(updateProcessor);
         botRegistrar.register(communityBot);
     }
 }
