@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.Set;
 
@@ -41,11 +40,7 @@ public class TopicsInputStateHandler extends AbstractStateHandler {
             String topicId = userService.addTopic(topic).getId();
             userService.addTopicToUser(userByTgId.getId(), topicId);
             log.info("topic={}", messageText);
-            messageSender.sendMsgWithMarkup(chatId, "Ще одну тему?", ReplyKeyboardMarkup.builder()
-                    .keyboardRow(new KeyboardRow(){{
-                        add("Завершити");
-                    }})
-                    .build());
+            messageSender.sendMsgWithMarkup(chatId, "Ще одну тему?", keyboardBuilder.buildButtonWithText("Завершити"));
         } else {
             // TODO: 19.07.2023 change this message to smth diff
             log.error("Не валідний топік ?? topic");
