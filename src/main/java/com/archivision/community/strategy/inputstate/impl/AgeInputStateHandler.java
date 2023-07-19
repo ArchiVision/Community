@@ -12,34 +12,36 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import static com.archivision.community.bot.State.CITY;
+import static com.archivision.community.bot.State.TOPIC;
 
 @Component
 @Slf4j
-public class NameInputStateHandler extends AbstractStateHandler {
-    private static final String ERROR_NAME = "Щось не так з ім'ям. Спробуй ще раз";
-
-    public NameInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender, KeyboardBuilderService keyboardBuilder) {
+public class AgeInputStateHandler extends AbstractStateHandler {
+    public AgeInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
+                                KeyboardBuilderService keyboardBuilder) {
         super(inputValidator, userService, messageSender, keyboardBuilder);
     }
+
+    private static final String ERROR_AGE = "Вкажи нормальний вік";
 
     @Override
     public void handle(Message message) {
         Long chatId = message.getChatId();
         String messageText = message.getText();
-        if (inputValidator.isNameValid(messageText)) {
+        if (inputValidator.isAgeValid(messageText)) {
             User user = userService.getUserByTgId(chatId);
-            user.setState(CITY);
-            user.setName(messageText);
+            user.setState(TOPIC);
+            user.setAge(Long.valueOf(messageText));
             userService.updateUser(user);
-            messageSender.sendTextMessage(chatId, ResponseTemplate.CITY_INPUT);
+            messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.TOPICS_INPUT, keyboardBuilder.generateSkipButton());
         } else {
-            messageSender.sendTextMessage(chatId, ERROR_NAME);
+            log.error("Вік={} задано не правильно", messageText);
+            messageSender.sendTextMessage(chatId, ERROR_AGE);
         }
     }
 
     @Override
     public State getStateType() {
-        return State.NAME;
+        return State.AGE;
     }
 }

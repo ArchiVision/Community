@@ -16,10 +16,10 @@ import java.util.Map;
 public class StateManagerService {
     private final Map<State, StateHandler> statesHandlers;
 
-    public void manageOtherStates(User user, Message message) {
-        StateHandler stateHandler = statesHandlers.get(user.getState());
+    public void manageOtherStates(State state, Message message) {
+        StateHandler stateHandler = statesHandlers.get(state);
         if (stateHandler != null) {
-            stateHandler.handle(user, message);
+            stateHandler.handle(message);
         }
     }
 }

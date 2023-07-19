@@ -20,4 +20,13 @@ public class InputValidator {
     public boolean isDescriptionValid(String description) {
         return !description.isBlank() && !description.isEmpty() && (description.length() <= 255 && description.length() >= 25);
     }
+
+    public boolean isAgeValid(String ageText) {
+        try {
+            int age = Integer.parseInt(ageText);
+            return age >= 14 && age <= 100;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }

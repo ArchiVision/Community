@@ -32,6 +32,7 @@ public class KeyboardBuilderService {
                                 .text("Змінити")
                                 .build()
                 )))
+                .oneTimeKeyboard(true)
                 .build();
     }
 }

@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class PhotoMessageStrategy implements MessageStrategy {
     @Override
     public void handleMessage(Message message) {
-        // Logic for handling photo message
+
     }
 
     @Override

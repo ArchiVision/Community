@@ -23,11 +23,11 @@ public class TextMessageStrategy implements MessageStrategy {
 
     @Override
     public void handleMessage(Message message) {
-        log.info("public void handleMessage(Message message) ");
+        log.info("public void handleMessage(Message message) , TextMessageStrategy");
         Long chatId = message.getChatId();
         User user = userService.getUserByTelegramId(chatId).orElse(null);
         if (user != null) {
-            stateManagerService.manageOtherStates(user, message);
+            stateManagerService.manageOtherStates(user.getState(), message);
         } else if (message.getText().contains(UserCommands.START.value())) {
             registerUser(chatId);
         }
@@ -44,7 +44,7 @@ public class TextMessageStrategy implements MessageStrategy {
         User user = new User();
         user.setState(State.NAME);
         user.setTelegramUserId(chatId);
-        userService.addUser(user);
+        userService.createUser(user);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class CallbackHandler implements Handler<CallbackQuery> {
                             .text("Your picture")
                     .chatId(callbackQuery.getMessage().getChatId())
                     .build());
-            telegramImageS3Service.sendImageToUser(callbackQuery.getMessage().getChatId());
+//            telegramImageS3Service.sendImageToUser(callbackQuery.getMessage().getChatId());
         }
     }
 }

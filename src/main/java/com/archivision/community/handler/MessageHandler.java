@@ -16,13 +16,14 @@ public class MessageHandler implements Handler<Message> {
 
     public void handle(Message message) {
         log.info("New message={} from={}. Delegating message to appropriate handler..", message, message.getFrom());
-        for (String strategyKey : strategyMap.keySet()) {
-            MessageStrategy strategy = strategyMap.get(strategyKey);
-            if (strategy.supports(message)) {
-                strategy.handleMessage(message);
-                return;
-            }
-        }
-        log.error("Cannot find handler for message={}", message);
+//        for (String strategyKey : strategyMap.keySet()) {
+//            MessageStrategy strategy = strategyMap.get(strategyKey);
+//            if (strategy.supports(message)) {
+//                strategy.handleMessage(message);
+//                return;
+//            }
+//        }
+        strategyMap.get("textMessageStrategy").handleMessage(message);
+//        log.error("Cannot find handler for message={}", message);
     }
 }

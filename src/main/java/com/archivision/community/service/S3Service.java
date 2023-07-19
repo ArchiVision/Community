@@ -4,6 +4,7 @@ package com.archivision.community.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.core.async.AsyncResponseTransformer;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
@@ -25,11 +26,25 @@ public class S3Service {
                         .join();
     }
 
+    public void uploadFileAsBytes(String bucketName, String key, byte[] bytes) {
+        s3Client.putObject(req -> req.bucket(bucketName)
+                                .key(key),
+                        AsyncRequestBody.fromBytes(bytes))
+                .join();
+    }
+
     public void downloadFile(String bucketName, String key, String destinationPath) {
         GetObjectResponse getObjectResponse =
                 s3Client.getObject(req -> req.bucket(bucketName)
                                         .key(key),
                                 AsyncResponseTransformer.toFile(Path.of(destinationPath)))
                         .join();
+    }
+
+    public byte[] downloadFileAsBytes(String bucketName, String key) {
+        return s3Client.getObject(req -> req.bucket(bucketName)
+                                .key(key),
+                        AsyncResponseTransformer.toBytes())
+                .join().asByteArray();
     }
 }

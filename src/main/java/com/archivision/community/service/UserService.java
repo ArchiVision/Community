@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,7 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final TopicRepository topicRepository;
 
-    public User addUser(User user) {
+    public User createUser(User user) {
         return userRepository.save(user);
     }
 
@@ -50,6 +51,26 @@ public class UserService {
     }
     public Optional<User> getUserByTelegramId(Long chatId) {
         return userRepository.findByTelegramUserId(chatId);
+    }
+
+    public User getUserByTgId(Long chatId) {
+        return userRepository.findByTelegramUserId(chatId).get();
+    }
+
+    public List<User> findAllUsers(){
+        return userRepository.findAll();
+    }
+
+    public User updateUser(User user){
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(String id){
+        userRepository.deleteById(id);
+    }
+
+    public Optional<User> findById(String id) {
+        return userRepository.findById(id);
     }
 }
 

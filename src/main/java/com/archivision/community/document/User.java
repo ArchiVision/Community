@@ -22,6 +22,7 @@ public class User {
     private String city;
     private String description;
     private Long age;
+    private String photoId;
 
     @Field("state")
     private State state = State.START;

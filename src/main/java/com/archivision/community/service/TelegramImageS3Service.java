@@ -10,11 +10,11 @@ import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Paths;
 
 @Component
 @Slf4j
@@ -24,6 +24,8 @@ public class TelegramImageS3Service {
     private final CommunityBot communityBot;
     private final S3Service s3Service;
     private static final String PICTURE_PATH = "uploads/photos/";
+    @Value("#{resourceLoaderService.getDefaultImage()}")
+    private byte[] defaultImageBytes;
 
     public TelegramImageS3Service(CommunityBot communityBot, S3Service s3Service) {
         this.communityBot = communityBot;
@@ -35,23 +37,26 @@ public class TelegramImageS3Service {
      * @param chatId user's chat id
      * @param fileId relative path on Telegram server
      */
-    public void uploadImageToStorage(String chatId, String fileId) {
-        String path = downloadFileById(chatId, fileId);
-        s3Service.uploadFile(avatarsBucketName, generateUserAvatarKey(chatId), path);
+    public void uploadImageToStorage(Long chatId, String fileId) {
+        byte[] bytes = downloadFileById(fileId);
+        s3Service.uploadFileAsBytes(avatarsBucketName, generateUserAvatarKey(chatId), bytes);
     }
 
     /**
      *
      * @param chatId user's chat id. Will be used to generate key to get it from S3 bucket
      */
-    public void sendImageToUser(Long chatId) {
+    public void sendImageToUser(Long chatId, boolean hasPhoto) {
         String pictureKey = generateUserAvatarKey(chatId);
-        String downloadedPicturePath = PICTURE_PATH + pictureKey;
-        s3Service.downloadFile(avatarsBucketName, pictureKey, downloadedPicturePath);
+        byte[] image = defaultImageBytes;
+        if (hasPhoto) {
+            image = s3Service.downloadFileAsBytes(avatarsBucketName, pictureKey);
+        }
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setChatId(chatId);
         InputFile inputFile = new InputFile();
-        inputFile.setMedia(Paths.get(downloadedPicturePath).toFile());
+        InputStream inputStream = new ByteArrayInputStream(image);
+        inputFile.setMedia(inputStream, PICTURE_PATH + pictureKey);
         sendPhoto.setPhoto(inputFile);
         try {
             communityBot.execute(sendPhoto);
@@ -61,7 +66,7 @@ public class TelegramImageS3Service {
         }
     }
 
-    private String downloadFileById(String chatId, String fileId) {
+    private byte[] downloadFileById(String fileId) {
         GetFile getFileRequest = new GetFile();
         getFileRequest.setFileId(fileId);
         File execute;
@@ -71,24 +76,23 @@ public class TelegramImageS3Service {
             throw new RuntimeException(e);
             // TODO: 17.07.2023 custom exception
         }
-        return downloadFileByFilePath(execute.getFilePath(), chatId);
+        return downloadFileByFilePath(execute.getFilePath());
     }
 
-    private String downloadFileByFilePath(String fileId, String userId) {
+    private byte[] downloadFileByFilePath(String fileId) {
         String fileUrl = String.format("https://api.telegram.org/file/bot%s/%s", communityBot.getBotToken(), fileId);
-        String fileName = "uploads/photos/avatar_" + userId + ".jpg";
-        try (BufferedInputStream in = new BufferedInputStream(new URL(fileUrl).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        try (InputStream inputStream = new URL(fileUrl).openStream()) {
             byte[] dataBuffer = new byte[1024];
             int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-                fileOutputStream.write(dataBuffer, 0, bytesRead);
+            while ((bytesRead = inputStream.read(dataBuffer, 0, 1024)) != -1) {
+                byteStream.write(dataBuffer, 0, bytesRead);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
             // TODO: 17.07.2023 custom exception
         }
-        return fileName;
+        return byteStream.toByteArray();
     }
 
     public static String generateUserAvatarKey(String userId) {
