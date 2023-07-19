@@ -69,6 +69,14 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public void deleteByTgId(Long id) {
+        userRepository.deleteByTelegramUserId(id);
+    }
+
+    public List<User> findAllExceptId(Long id) {
+        return userRepository.findAllByTelegramUserIdNot(id);
+    }
+
     public Optional<User> findById(String id) {
         return userRepository.findById(id);
     }

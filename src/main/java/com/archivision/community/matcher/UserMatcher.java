@@ -45,7 +45,7 @@ public class UserMatcher {
     }
 
     private double getMatchedCitiesProbability(String cityA, String cityB) {
-        return cityA.toLowerCase().equals(cityB.toLowerCase()) ? 1D : 0D;
+        return cityA.equalsIgnoreCase(cityB) ? 1D : 0D;
     }
 
     private boolean isAgeAcceptableForDating(Long ageA, Long ageB) {
