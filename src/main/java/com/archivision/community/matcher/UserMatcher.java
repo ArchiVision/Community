@@ -15,6 +15,7 @@ import static java.lang.Math.exp;
 @Component
 @RequiredArgsConstructor
 public class UserMatcher {
+    private static final int NUMBER_OF_COMPARISON_PARAMS = 2;
 
     public MatchResult match(User userA, User userB) {
         if (!isAgeAcceptableForDating(userA.getAge(), userB.getAge())) {
@@ -35,8 +36,8 @@ public class UserMatcher {
     *   Biases allow us to stay in 0 to 1 interval as can't do plain addition
     */
     private double getMatchingProbability(User userA, User userB) {
-        return (getMatchedAgeProbability(userA.getAge(), userB.getAge()) * AGE_BIAS.getBias()) +
-               (getMatchedCitiesProbability(userA.getCity(), userB.getCity()) * CITY_BIAS.getBias());
+        return ((getMatchedAgeProbability(userA.getAge(), userB.getAge()) * AGE_BIAS.getBias()) +
+               (getMatchedCitiesProbability(userA.getCity(), userB.getCity()) * CITY_BIAS.getBias())) / NUMBER_OF_COMPARISON_PARAMS;
 
     }
 
@@ -49,6 +50,14 @@ public class UserMatcher {
     }
 
     private boolean isAgeAcceptableForDating(Long ageA, Long ageB) {
-        return ageB > (ageA / 2) + 7;
+        return ageB <= calculateMaximumDatingAge(ageA) && ageB >= calculateMinimumDatingAge(ageA);
+    }
+
+    private Long calculateMinimumDatingAge(Long userAge) {
+        return (userAge / 2) + 7;
+    }
+
+    private Long calculateMaximumDatingAge(Long userAge) {
+        return (userAge - 7) * 2;
     }
 }
