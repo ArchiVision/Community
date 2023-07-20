@@ -8,12 +8,13 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "users")
 @Data
-public class User {
+public class User implements Serializable {
     @Id
     private String id;
     @Indexed(unique = true)

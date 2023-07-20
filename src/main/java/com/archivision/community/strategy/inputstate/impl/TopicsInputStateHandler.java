@@ -8,12 +8,11 @@ import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
 import com.archivision.community.strategy.inputstate.AbstractStateHandler;
+import com.archivision.community.strategy.inputstate.OptionalState;
 import com.archivision.community.util.InputValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.util.Set;
 
@@ -21,7 +20,7 @@ import static com.archivision.community.bot.State.DESCRIPTION;
 
 @Component
 @Slf4j
-public class TopicsInputStateHandler extends AbstractStateHandler {
+public class TopicsInputStateHandler extends AbstractStateHandler implements OptionalState {
 
     public TopicsInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
                                    KeyboardBuilderService keyboardBuilderService) {
@@ -55,24 +54,26 @@ public class TopicsInputStateHandler extends AbstractStateHandler {
     private boolean changeStateToApproveIfSkipped(Long chatId, String messageText) {
         // TODO: 19.07.2023 move this Set creating to constant
         if (Set.of("Пропустити", "Завершити").contains(messageText)) {
-            userService.changeState(chatId, DESCRIPTION);
-            sendResponseWithMarkup(chatId, ResponseTemplate.DESC_INPUT, keyboardBuilder.generateSkipButton());
+            changeToNextState(chatId);
             return true;
         }
         return false;
     }
 
-    private void sendResponseWithMarkup(Long chatId, String userResponseText, ReplyKeyboardMarkup markup) {
-        SendMessage sendMessage = SendMessage.builder()
-                .text(userResponseText)
-                .chatId(chatId)
-                .replyMarkup(markup)
-                .build();
-        messageSender.sendMessage(sendMessage);
-    }
-
     @Override
     public State getStateType() {
         return State.TOPIC;
+    }
+
+    @Override
+    public void changeToNextState(Long chatId) {
+        NextStateData nextState = getNextState();
+        userService.changeState(chatId, nextState.state());
+        messageSender.sendNextStateData(chatId, nextState);
+    }
+
+    @Override
+    public NextStateData getNextState() {
+        return new NextStateData(DESCRIPTION, ResponseTemplate.DESC_INPUT, keyboardBuilder.generateSkipButton());
     }
 }

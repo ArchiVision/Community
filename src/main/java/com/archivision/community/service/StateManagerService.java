@@ -1,7 +1,6 @@
 package com.archivision.community.service;
 
 import com.archivision.community.bot.State;
-import com.archivision.community.document.User;
 import com.archivision.community.strategy.inputstate.StateHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

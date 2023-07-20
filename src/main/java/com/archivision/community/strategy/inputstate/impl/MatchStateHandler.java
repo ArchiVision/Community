@@ -29,11 +29,7 @@ public class MatchStateHandler extends AbstractStateHandler {
 
     @Override
     public void handle(Message message) {
-        final Long chatId = message.getChatId();
-        final User user = userService.getUserByTgId(chatId);
-        final List<User> allUsers = userService.findAllExceptId(chatId);
 
-        final List<UserWithMatchedProbability> orderedMatchingList = matchedUsersListResolver.getOrderedMatchingList(user, allUsers);
         // todo: send by one
 
     }

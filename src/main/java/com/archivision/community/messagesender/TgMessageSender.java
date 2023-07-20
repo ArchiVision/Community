@@ -3,6 +3,7 @@ package com.archivision.community.messagesender;
 
 import com.archivision.community.bot.CommunityBot;
 import com.archivision.community.exception.UnableSendMessageException;
+import com.archivision.community.strategy.inputstate.OptionalState;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,6 +49,11 @@ public class TgMessageSender implements MessageSender {
                 .replyMarkup(markup)
                 .build();
         sendMessage(message);
+    }
+
+    @Override
+    public void sendNextStateData(Long chatId, OptionalState.NextStateData nextState) {
+        sendMsgWithMarkup(chatId, nextState.responseText(), nextState.markup());
     }
 
     @Autowired

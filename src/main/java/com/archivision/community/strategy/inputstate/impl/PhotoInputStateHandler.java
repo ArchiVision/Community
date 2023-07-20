@@ -11,10 +11,8 @@ import com.archivision.community.strategy.inputstate.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import static com.archivision.community.bot.State.APPROVE;
 
@@ -61,16 +59,7 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
 
     private void goToApprovalState(Long chatId) {
         userService.changeState(chatId, APPROVE);
-        sendResponseWithMarkup(chatId, ResponseTemplate.APPROVE_INPUT, keyboardBuilder.generateApprovalButtons());
-    }
-
-    private void sendResponseWithMarkup(Long chatId, String userResponseText, ReplyKeyboardMarkup markup) {
-        SendMessage sendMessage = SendMessage.builder()
-                .text(userResponseText)
-                .chatId(chatId)
-                .replyMarkup(markup)
-                .build();
-        messageSender.sendMessage(sendMessage);
+        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.APPROVE_INPUT, keyboardBuilder.generateApprovalButtons());
     }
 
     @Override
