@@ -19,8 +19,6 @@ import static java.lang.Math.exp;
 @RequiredArgsConstructor
 public class UserMatcher {
     private final TopicComparator topicComparator;
-    private static final int NUMBER_OF_COMPARISON_PARAMS = 3;
-
     public MatchResult match(User userA, User userB) {
         if (!isAgeAcceptableForDating(userA.getAge(), userB.getAge())) {
             return MatchResult.failed(MatchStatus.UNACCEPTABLE_AGE_DIFFERENCE);
@@ -43,8 +41,18 @@ public class UserMatcher {
         return ((getMatchedAgeProbability(userA.getAge(), userB.getAge()) * AGE_BIAS.getBias()) +
                 (getMatchedCitiesProbability(userA.getCity(), userB.getCity()) * CITY_BIAS.getBias()) +
                 (getMatchedTopicsProbability(userA.getTopics(), userB.getTopics())) * TOPICS.getBias())
-                / NUMBER_OF_COMPARISON_PARAMS;
+                / getNumberOfAvailableParams(userA);
 
+    }
+
+    /**
+     * This method is needed for identification of probability divider for general matched
+     * probability. We consider only available params for matching probability.
+     */
+    private int getNumberOfAvailableParams(User user) {
+        return (user.getAge() != null ? 1 : 0) +
+                (!user.getTopics().isEmpty() ? 1 : 0) +
+                (user.getCity() != null ? 1 : 0);
     }
 
     private double getMatchedTopicsProbability(List<Topic> topics1, List<Topic> topics2) {

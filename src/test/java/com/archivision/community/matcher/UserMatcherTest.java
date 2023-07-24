@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- *  Tests for verifying probabilities for matching
+ *  Tests for verifying probabilities for matching algorithm
  *  Percentage values are theoretical and should be asserted empirical
  * **/
 class UserMatcherTest {
