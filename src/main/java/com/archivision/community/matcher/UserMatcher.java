@@ -1,11 +1,14 @@
 package com.archivision.community.matcher;
 
+import com.archivision.community.document.Topic;
 import com.archivision.community.document.User;
+import com.archivision.community.matcher.nlp.TopicComparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static com.archivision.community.matcher.bias.MatchingBias.AGE_BIAS;
-import static com.archivision.community.matcher.bias.MatchingBias.CITY_BIAS;
+import java.util.List;
+
+import static com.archivision.community.matcher.bias.MatchingBias.*;
 import static java.lang.Math.abs;
 import static java.lang.Math.exp;
 
@@ -15,8 +18,7 @@ import static java.lang.Math.exp;
 @Component
 @RequiredArgsConstructor
 public class UserMatcher {
-    private static final int NUMBER_OF_COMPARISON_PARAMS = 2;
-
+    private final TopicComparator topicComparator;
     public MatchResult match(User userA, User userB) {
         if (!isAgeAcceptableForDating(userA.getAge(), userB.getAge())) {
             return MatchResult.failed(MatchStatus.UNACCEPTABLE_AGE_DIFFERENCE);
@@ -37,8 +39,32 @@ public class UserMatcher {
     */
     private double getMatchingProbability(User userA, User userB) {
         return ((getMatchedAgeProbability(userA.getAge(), userB.getAge()) * AGE_BIAS.getBias()) +
-               (getMatchedCitiesProbability(userA.getCity(), userB.getCity()) * CITY_BIAS.getBias())) / NUMBER_OF_COMPARISON_PARAMS;
+                (getMatchedCitiesProbability(userA.getCity(), userB.getCity()) * CITY_BIAS.getBias()) +
+                (getMatchedTopicsProbability(userA.getTopics(), userB.getTopics())) * TOPICS.getBias())
+                / getNumberOfAvailableParams(userA);
 
+    }
+
+    /**
+     * This method is needed for identification of probability divider for general matched
+     * probability. We consider only available params for matching probability.
+     */
+    private int getNumberOfAvailableParams(User user) {
+        return (user.getAge() != null ? 1 : 0) +
+                (!user.getTopics().isEmpty() ? 1 : 0) +
+                (user.getCity() != null ? 1 : 0);
+    }
+
+    private double getMatchedTopicsProbability(List<Topic> topics1, List<Topic> topics2) {
+        final int smallerListLength = Math.min(topics1.size(), topics2.size());
+        return topics1.stream()
+                .limit(smallerListLength)
+                .mapToDouble(
+                        topic1 -> topicComparator.compare(topic1.getName(),
+                        topics2.get(topics1.indexOf(topic1)).getName())
+                )
+                .average()
+                .orElse(0.0);
     }
 
     private double getMatchedAgeProbability(Long ageA, Long ageB) {
