@@ -50,4 +50,5 @@ class LevenshteinAlgorithmTest {
         assertEquals(0.25, wordsComparator.compare("good", "bad"));
         assertEquals(0.0, wordsComparator.compare("good", "nice"));
     }
+
 }
