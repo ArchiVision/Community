@@ -1,6 +1,7 @@
 package com.archivision.community.matcher;
 
 import com.archivision.community.document.User;
+import com.archivision.community.matcher.nlp.LevenshteinAlgorithm;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * **/
 class UserMatcherTest {
     private final double DELTA = 0.001;
-    private final UserMatcher userMatcher = new UserMatcher();
+    private final UserMatcher userMatcher = new UserMatcher(new LevenshteinAlgorithm());
 
     @Test
     public void testIdealMatch() {

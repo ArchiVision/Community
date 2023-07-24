@@ -2,7 +2,8 @@ package com.archivision.community.matcher.bias;
 
 public enum MatchingBias {
     AGE_BIAS(1F),
-    CITY_BIAS(1F);
+    CITY_BIAS(1F),
+    TOPICS(0.7F);
 
     private final float bias;
 
