@@ -1,11 +1,11 @@
-package com.archivision.community.strategy.inputstate.impl;
+package com.archivision.community.state.input.impl;
 
 import com.archivision.community.bot.State;
 import com.archivision.community.matcher.MatchedUsersListResolver;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
-import com.archivision.community.strategy.inputstate.AbstractStateHandler;
+import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,12 +24,29 @@ public class MatchStateHandler extends AbstractStateHandler {
     }
 
     @Override
-    public void handle(Message message) {
+    public void doHandle(Message message) {
+        // TODO: 28.07.2023
+    }
 
+    @Override
+    public void onValidationError(Message message) {
+        super.onValidationError(message);
+        // TODO: 28.07.2023
+    }
+
+    @Override
+    public boolean valid(Message message) {
+        return super.valid(message);
+        // TODO: 28.07.2023
     }
 
     @Override
     public State getStateType() {
         return State.MATCH;
+    }
+
+    @Override
+    public boolean isValidatable() {
+        return true;
     }
 }

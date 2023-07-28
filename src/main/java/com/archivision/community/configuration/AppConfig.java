@@ -1,7 +1,7 @@
 package com.archivision.community.configuration;
 
 import com.archivision.community.bot.State;
-import com.archivision.community.strategy.inputstate.StateHandler;
+import com.archivision.community.state.StateHandler;
 import com.archivision.community.strategy.message.MessageStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

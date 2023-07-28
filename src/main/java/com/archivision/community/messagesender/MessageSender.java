@@ -1,6 +1,6 @@
 package com.archivision.community.messagesender;
 
-import com.archivision.community.strategy.inputstate.OptionalState;
+import com.archivision.community.state.OptionalState;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 

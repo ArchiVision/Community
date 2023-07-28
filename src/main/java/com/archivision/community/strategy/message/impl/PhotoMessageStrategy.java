@@ -1,7 +1,7 @@
 package com.archivision.community.strategy.message.impl;
 
 import com.archivision.community.bot.State;
-import com.archivision.community.document.User;
+import com.archivision.community.entity.User;
 import com.archivision.community.service.StateManagerService;
 import com.archivision.community.service.UserService;
 import com.archivision.community.strategy.message.MessageStrategy;

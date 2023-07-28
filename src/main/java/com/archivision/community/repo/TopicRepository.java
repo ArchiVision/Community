@@ -1,6 +1,10 @@
 package com.archivision.community.repo;
 
-import com.archivision.community.document.Topic;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import com.archivision.community.entity.Topic;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TopicRepository extends MongoRepository<Topic, String> {}
+import java.util.Optional;
+
+public interface TopicRepository extends JpaRepository<Topic, Long> {
+    Optional<Topic> findByName(String topicName);
+}

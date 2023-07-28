@@ -1,13 +1,13 @@
-package com.archivision.community.strategy.inputstate.impl;
+package com.archivision.community.state.input.impl;
 
 import com.archivision.community.bot.State;
 import com.archivision.community.command.ResponseTemplate;
-import com.archivision.community.document.User;
+import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.TelegramImageS3Service;
 import com.archivision.community.service.UserService;
-import com.archivision.community.strategy.inputstate.AbstractStateHandler;
+import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -28,20 +28,25 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
     }
 
     @Override
-    public void handle(Message message) {
+    public void doHandle(Message message) {
         Long chatId = message.getChatId();
-        String messageText = message.getText();
-        boolean ableToSendPhoto = isAbleToSendPhoto(chatId, messageText);
-        if (ableToSendPhoto && message.hasPhoto()) {
-            PhotoSize photoSize = message.getPhoto().get(2);
-            imageS3Service.uploadImageToStorage(chatId, photoSize.getFileId());
-            User user = userService.getUserByTgId(chatId);
-            user.setPhotoId(TelegramImageS3Service.generateUserAvatarKey(chatId));
-            userService.updateUser(user);
-            goToApprovalState(chatId);
-        } else {
-            log.error("Cannot send a photo");
-        }
+        PhotoSize photoSize = message.getPhoto().get(2);
+        imageS3Service.uploadImageToStorage(chatId, photoSize.getFileId());
+        User user = userService.getUserByTgId(chatId);
+        user.setPhotoId(TelegramImageS3Service.generateUserAvatarKey(chatId));
+        userService.updateUser(user);
+        goToApprovalState(chatId);
+    }
+
+    @Override
+    public void onValidationError(Message message) {
+        log.error("Cannot send a photo");
+    }
+
+    @Override
+    public boolean valid(Message message) {
+        boolean ableToSendPhoto = isAbleToSendPhoto(message.getChatId(), message.getText());
+        return ableToSendPhoto && message.hasPhoto();
     }
 
     private boolean isAbleToSendPhoto(Long chatId, String messageText) {
@@ -65,5 +70,10 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
     @Override
     public State getStateType() {
         return State.PHOTO;
+    }
+
+    @Override
+    public boolean isValidatable() {
+        return true;
     }
 }

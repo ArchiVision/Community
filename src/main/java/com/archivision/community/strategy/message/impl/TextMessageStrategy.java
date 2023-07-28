@@ -3,7 +3,7 @@ package com.archivision.community.strategy.message.impl;
 import com.archivision.community.bot.State;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.command.UserCommands;
-import com.archivision.community.document.User;
+import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.StateManagerService;
 import com.archivision.community.service.UserService;
@@ -44,7 +44,7 @@ public class TextMessageStrategy implements MessageStrategy {
         User user = new User();
         user.setState(State.NAME);
         user.setTelegramUserId(chatId);
-        userService.createUser(user);
+        userService.saveUser(user);
     }
 
     @Override

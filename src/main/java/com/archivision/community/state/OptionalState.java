@@ -1,4 +1,4 @@
-package com.archivision.community.strategy.inputstate;
+package com.archivision.community.state;
 
 import com.archivision.community.bot.State;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;

@@ -1,6 +1,6 @@
 package com.archivision.community.matcher;
 
-import com.archivision.community.document.User;
+import com.archivision.community.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

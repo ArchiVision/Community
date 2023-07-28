@@ -5,6 +5,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,6 +25,14 @@ public class KeyboardBuilderService {
                 .build();
     }
 
+    public ReplyKeyboardMarkup generateGenderButtons() {
+        return generateMultiButtons("Хлопець", "Дівчина", "Інше");
+    }
+
+    public ReplyKeyboardMarkup generateLookingGenderButtons() {
+        return generateMultiButtons("Хлопців", "Дівчат", "Все одно");
+    }
+
     public ReplyKeyboardMarkup buildButtonWithText(String text) {
         return ReplyKeyboardMarkup.builder()
                 .keyboardRow(new KeyboardRow(){{
@@ -34,19 +43,23 @@ public class KeyboardBuilderService {
     }
 
     public ReplyKeyboardMarkup generateApprovalButtons() {
-        return ReplyKeyboardMarkup.builder()
-                .keyboardRow(new KeyboardRow(List.of(
-                        buttonWith(YES),
-                        buttonWith(CHANGE)
-                )))
-                .oneTimeKeyboard(true)
-                .resizeKeyboard(true)
+        return generateMultiButtons(YES, CHANGE);
+    }
+
+    private KeyboardButton buttonWith(String text) {
+        return KeyboardButton.builder()
+                .text(text)
                 .build();
     }
 
-    private static KeyboardButton buttonWith(String text) {
-        return KeyboardButton.builder()
-                .text(text)
+    public ReplyKeyboardMarkup generateMultiButtons(String ... buttonTexts) {
+        List<KeyboardButton> buttonList = Arrays.stream(buttonTexts)
+                .map(this::buttonWith)
+                .toList();
+        return ReplyKeyboardMarkup.builder()
+                .keyboardRow(new KeyboardRow(buttonList))
+                .oneTimeKeyboard(true)
+                .resizeKeyboard(true)
                 .build();
     }
 }

@@ -1,14 +1,13 @@
-package com.archivision.community.strategy.inputstate.impl;
+package com.archivision.community.state.input.impl;
 
 import com.archivision.community.bot.State;
 import com.archivision.community.command.ResponseTemplate;
-import com.archivision.community.document.Topic;
-import com.archivision.community.document.User;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
-import com.archivision.community.strategy.inputstate.AbstractStateHandler;
-import com.archivision.community.strategy.inputstate.OptionalState;
+import com.archivision.community.service.UserTopicService;
+import com.archivision.community.state.AbstractStateHandler;
+import com.archivision.community.state.OptionalState;
 import com.archivision.community.util.InputValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,29 +20,33 @@ import static com.archivision.community.bot.State.DESCRIPTION;
 @Component
 @Slf4j
 public class TopicsInputStateHandler extends AbstractStateHandler implements OptionalState {
+    private final UserTopicService userTopicService;
 
     public TopicsInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                                   KeyboardBuilderService keyboardBuilderService) {
+                                   KeyboardBuilderService keyboardBuilderService, UserTopicService userTopicService) {
         super(inputValidator, userService, messageSender, keyboardBuilderService);
+        this.userTopicService = userTopicService;
     }
 
     @Override
-    public void handle(Message message) {
+    public void doHandle(Message message) {
         String messageText = message.getText();
         Long chatId = message.getChatId();
-        boolean ableToInputTopic = isAbleToInputTopic(chatId, messageText);
-        if (ableToInputTopic && inputValidator.isTopicValid(messageText)) {
-            User userByTgId = userService.getUserByTgId(chatId);
-            Topic topic = new Topic();
-            topic.setName(messageText);
-            String topicId = userService.addTopic(topic).getId();
-            userService.addTopicToUser(userByTgId.getId(), topicId);
-            log.info("topic={}", messageText);
-            messageSender.sendMsgWithMarkup(chatId, "Ще одну тему?", keyboardBuilder.buildButtonWithText("Завершити"));
-        } else {
-            // TODO: 19.07.2023 change this message to smth diff
-            log.error("Не валідний топік ?? topic");
-        }
+        userTopicService.addTopicToUser(chatId, messageText);
+        log.info("topic={}", messageText);
+        messageSender.sendMsgWithMarkup(chatId, "Ще одну тему?", keyboardBuilder.buildButtonWithText("Завершити"));
+    }
+
+    @Override
+    public void onValidationError(Message message) {
+        // TODO: 19.07.2023 change this message to smth diff
+        log.error("Не валідний топік ?? topic");
+    }
+
+    @Override
+    public boolean valid(Message message) {
+        boolean ableToInputTopic = isAbleToInputTopic(message.getChatId(), message.getText());
+        return ableToInputTopic && inputValidator.isTopicValid(message.getText());
     }
 
     private boolean isAbleToInputTopic(Long chatId, String messageText) {
@@ -75,5 +78,10 @@ public class TopicsInputStateHandler extends AbstractStateHandler implements Opt
     @Override
     public NextStateData getNextState() {
         return new NextStateData(DESCRIPTION, ResponseTemplate.DESC_INPUT, keyboardBuilder.generateSkipButton());
+    }
+
+    @Override
+    public boolean isValidatable() {
+        return true;
     }
 }

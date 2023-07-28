@@ -1,14 +1,15 @@
 package com.archivision.community.service;
 
-import com.archivision.community.document.Topic;
-import com.archivision.community.document.User;
+import com.archivision.community.entity.Topic;
+import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -47,7 +48,7 @@ public class ProfileSender {
         return formattedProfileText;
     }
 
-    private String formatTopics(List<Topic> topics) {
+    private String formatTopics(Set<Topic> topics) {
         return  "{" + topics.stream().map(Topic::getName).collect(Collectors.joining(",")) + "}";
     }
 }

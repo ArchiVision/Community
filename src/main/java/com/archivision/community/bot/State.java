@@ -8,6 +8,8 @@ public enum State {
     NAME("name"),
     CITY("city"),
     AGE("age"),
+    GENDER("gender"),
+    LOOKING("looking"),
     TOPIC("topic"),
     DESCRIPTION("description"),
     APPROVE("approve"),

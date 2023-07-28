@@ -1,13 +1,13 @@
-package com.archivision.community.strategy.inputstate.impl;
+package com.archivision.community.state.input.impl;
 
 import com.archivision.community.bot.State;
 import com.archivision.community.command.ResponseTemplate;
-import com.archivision.community.document.User;
+import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
-import com.archivision.community.strategy.inputstate.AbstractStateHandler;
-import com.archivision.community.strategy.inputstate.OptionalState;
+import com.archivision.community.state.AbstractStateHandler;
+import com.archivision.community.state.OptionalState;
 import com.archivision.community.util.InputValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,20 +25,14 @@ public class DescriptionStateHandler extends AbstractStateHandler implements Opt
     }
 
     @Override
-    public void handle(Message message) {
+    public void doHandle(Message message) {
         Long chatId = message.getChatId();
         String messageText = message.getText();
-        boolean ableToEnter = isAbleToEnterDesc(chatId, messageText);
-        if (ableToEnter && inputValidator.isDescriptionValid(messageText)) {
-            User user = userService.getUserByTgId(chatId);
-            user.setState(PHOTO);
-            user.setDescription(messageText);
-            userService.updateUser(user);
-            messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.PHOTO, keyboardBuilder.generateSkipButton());
-        } else {
-            // TODO: 19.07.2023 change this message to smth diff
-            log.error("?? desc={}, able to enter={}", messageText, ableToEnter);
-        }
+        User user = userService.getUserByTgId(chatId);
+        user.setState(PHOTO);
+        user.setDescription(messageText);
+        userService.updateUser(user);
+        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.PHOTO, keyboardBuilder.generateSkipButton());
     }
 
     private boolean isAbleToEnterDesc(Long chatId, String messageText) {
@@ -52,6 +46,18 @@ public class DescriptionStateHandler extends AbstractStateHandler implements Opt
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onValidationError(Message message) {
+        // TODO: 19.07.2023 change this message to smth diff
+        log.error("?? desc={}", message.getText());
+    }
+
+    @Override
+    public boolean valid(Message message) {
+        boolean ableToEnter = isAbleToEnterDesc(message.getChatId(), message.getText());
+        return ableToEnter && inputValidator.isDescriptionValid(message.getText());
     }
 
     @Override
@@ -69,5 +75,10 @@ public class DescriptionStateHandler extends AbstractStateHandler implements Opt
     @Override
     public NextStateData getNextState() {
         return new NextStateData(PHOTO, ResponseTemplate.PHOTO, keyboardBuilder.generateSkipButton());
+    }
+
+    @Override
+    public boolean isValidatable() {
+        return true;
     }
 }

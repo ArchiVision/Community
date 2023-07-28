@@ -1,6 +1,6 @@
 package com.archivision.community.matcher;
 
-import com.archivision.community.document.User;
+import com.archivision.community.entity.User;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
