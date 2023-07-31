@@ -1,12 +1,12 @@
 package com.archivision.community.matcher;
 
-import com.archivision.community.document.Topic;
-import com.archivision.community.document.User;
+import com.archivision.community.entity.Topic;
+import com.archivision.community.entity.User;
 import com.archivision.community.matcher.nlp.TopicComparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Set;
 
 import static com.archivision.community.matcher.bias.MatchingBias.*;
 import static java.lang.Math.abs;
@@ -55,17 +55,19 @@ public class UserMatcher {
                 (user.getCity() != null ? 1 : 0);
     }
 
-    private double getMatchedTopicsProbability(List<Topic> topics1, List<Topic> topics2) {
-        final int smallerListLength = Math.min(topics1.size(), topics2.size());
+    private double getMatchedTopicsProbability(Set<Topic> topics1, Set<Topic> topics2) {
         return topics1.stream()
-                .limit(smallerListLength)
-                .mapToDouble(
-                        topic1 -> topicComparator.compare(topic1.getName(),
-                        topics2.get(topics1.indexOf(topic1)).getName())
+                .flatMap(topic1 -> topics2.stream()
+                        .map(topic2 -> topicComparator.compare(
+                                topic1.getName(),
+                                topic2.getName())
+                        )
                 )
+                .mapToDouble(Double::doubleValue)
                 .average()
                 .orElse(0.0);
     }
+
 
     private double getMatchedAgeProbability(Long ageA, Long ageB) {
         return exp(-1 * abs(ageA - ageB));

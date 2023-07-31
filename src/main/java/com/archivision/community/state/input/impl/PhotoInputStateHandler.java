@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
+import java.util.List;
+
 import static com.archivision.community.bot.State.APPROVE;
 
 @Component
@@ -30,7 +32,13 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
-        PhotoSize photoSize = message.getPhoto().get(2);
+        List<PhotoSize> photo = message.getPhoto();
+        PhotoSize photoSize;
+        if (photo.size() > 2) {
+            photoSize = photo.get(2);
+        } else {
+            photoSize = photo.get(0);
+        }
         imageS3Service.uploadImageToStorage(chatId, photoSize.getFileId());
         User user = userService.getUserByTgId(chatId);
         user.setPhotoId(TelegramImageS3Service.generateUserAvatarKey(chatId));
