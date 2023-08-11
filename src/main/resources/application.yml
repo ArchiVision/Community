@@ -6,11 +6,12 @@ telegram:
 spring:
   data:
     mongodb:
-      host: localhost
+      authentication-database: admin
+      username: rootuser
+      password: rootpass
+      host: mongodb
       port: 27017
-      database: db_name
-      username: db_username
-      password: password
+      database: data
     redis:
       url: redis://localhost:6379
 
