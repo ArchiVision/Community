@@ -29,21 +29,22 @@ public class TextMessageStrategy implements MessageStrategy {
         if (user != null) {
             stateManagerService.manageOtherStates(user.getState(), message);
         } else if (message.getText().contains(UserCommands.START.value())) {
-            registerUser(chatId);
+            registerUser(chatId, message);
         }
     }
 
-    private void registerUser(Long chatId) {
+    private void registerUser(Long chatId, Message message) {
         log.info("User with telegram id={} not found id DB. Saving.", chatId);
-        saveUser(chatId);
+        saveUser(chatId, message.getFrom().getUserName());
         messageSender.sendTextMessage(chatId, ResponseTemplate.START);
         messageSender.sendTextMessage(chatId, ResponseTemplate.NAME_INPUT);
     }
 
-    private void saveUser(Long chatId) {
+    private void saveUser(Long chatId, String username) {
         User user = new User();
         user.setState(State.NAME);
         user.setTelegramUserId(chatId);
+        user.setUsername(username);
         userService.saveUser(user);
     }
 
