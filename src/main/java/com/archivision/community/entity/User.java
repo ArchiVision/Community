@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.NaturalId;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,8 +23,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NaturalId
     private Long telegramUserId;
     private String name;
+    private String username;
     private String city;
     private Long age;
     @Enumerated(EnumType.STRING)

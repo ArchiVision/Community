@@ -1,4 +1,4 @@
-package com.archivision.community.configuration;
+package com.archivision.community.config;
 
 import com.archivision.community.bot.State;
 import com.archivision.community.state.StateHandler;
@@ -14,7 +14,6 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class AppConfig {
-
     private final List<StateHandler> stateHandlers;
 
     @Bean

@@ -1,12 +1,11 @@
 package com.archivision.community.service;
 
-import org.springframework.stereotype.Service;
-
 import com.archivision.community.entity.Topic;
 import com.archivision.community.entity.User;
 import com.archivision.community.repo.TopicRepository;
 import com.archivision.community.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service

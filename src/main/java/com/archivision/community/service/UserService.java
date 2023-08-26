@@ -1,7 +1,6 @@
 package com.archivision.community.service;
 
 import com.archivision.community.bot.State;
-import com.archivision.community.entity.Topic;
 import com.archivision.community.entity.User;
 import com.archivision.community.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +32,7 @@ public class UserService {
     @Transactional
     public User getUserByTgId(Long chatId) {
         User user = userRepository.findByTelegramUserId(chatId).get();
-        user.getTopics().contains("1");
+        user.getTopics().contains("1"); // TODO: 27.08.2023 OMG, other way please :)
         return user;
     }
 
