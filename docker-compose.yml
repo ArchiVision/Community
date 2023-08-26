@@ -1,15 +1,11 @@
 version: '1'
 services:
-  mongodb:
-    image: mongo
-    restart: always
-    ports:
-      - 27017:27017
-    volumes:
-      - ./data:/data/db
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin123
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
 
   redis:
     image: redis
@@ -19,12 +15,15 @@ services:
     volumes:
       - ./redis-data:/data
 
-  community-app:
+  app:
+    image: 'docker-spring-boot-postgres:latest'
     build:
       context: .
-      dockerfile: Dockerfile
-    ports:
-      - 8080:8080
+    container_name: app
     depends_on:
-      - mongodb
       - redis
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
