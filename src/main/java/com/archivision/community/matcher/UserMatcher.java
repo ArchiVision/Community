@@ -4,6 +4,7 @@ import com.archivision.community.entity.Topic;
 import com.archivision.community.entity.User;
 import com.archivision.community.matcher.nlp.TopicComparator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -17,6 +18,7 @@ import static java.lang.Math.exp;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class UserMatcher {
     private final TopicComparator topicComparator;
     public MatchResult match(User userA, User userB) {

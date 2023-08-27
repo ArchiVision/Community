@@ -1,6 +1,7 @@
 package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
+import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.cache.ActiveViewingData;
 import com.archivision.community.matcher.MatchedUsersListResolver;
 import com.archivision.community.messagesender.MessageSender;
@@ -27,8 +28,9 @@ public class MatchStateHandler extends AbstractStateHandler {
     private static final Set<String> options = Set.of("+", "-");
 
     public MatchStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                             KeyboardBuilderService keyboardBuilder, MatchedUsersListResolver matchedUsersListResolver, ActiveViewingData activeViewingData, UserLikeService userLikeService, ProfileSender profileSender) {
-        super(inputValidator, userService, messageSender, keyboardBuilder);
+                             KeyboardBuilderService keyboardBuilder, MatchedUsersListResolver matchedUsersListResolver, ActiveViewingData activeViewingData,
+                             UserLikeService userLikeService, ProfileSender profileSender, ActiveRegistrationProcessCache registrationProcessCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
 
         this.matchedUsersListResolver = matchedUsersListResolver;
         this.activeViewingData = activeViewingData;

@@ -1,8 +1,9 @@
 package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
+import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
-import com.archivision.community.entity.User;
+import com.archivision.community.dto.UserDto;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
@@ -18,18 +19,17 @@ import static com.archivision.community.bot.State.GENDER;
 @Slf4j
 public class AgeInputStateHandler extends AbstractStateHandler {
     public AgeInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                                KeyboardBuilderService keyboardBuilder) {
-        super(inputValidator, userService, messageSender, keyboardBuilder);
+                                KeyboardBuilderService keyboardBuilder, ActiveRegistrationProcessCache registrationProcessCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
     }
 
     private static final String ERROR_AGE = "Вкажи нормальний вік";
 
     @Override
     public void doHandle(Message message) {
-        User user = userService.getUserByTgId(message.getChatId());
+        UserDto user = registrationProcessCache.getCurrentUser(message.getChatId());
         user.setAge(Long.valueOf(message.getText()));
         user.setState(GENDER);
-        userService.updateUser(user);
         messageSender.sendMsgWithMarkup(message.getChatId(), ResponseTemplate.GENDER_INPUT,
                 keyboardBuilder.generateGenderButtons());
     }

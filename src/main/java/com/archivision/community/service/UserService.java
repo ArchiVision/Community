@@ -1,7 +1,9 @@
 package com.archivision.community.service;
 
 import com.archivision.community.bot.State;
+import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.User;
+import com.archivision.community.mapper.UserMapper;
 import com.archivision.community.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import java.util.Optional;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Transactional
     public void changeState(Long userId, State userState) {
@@ -62,6 +65,10 @@ public class UserService {
 
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+
+    public User saveUser(UserDto userDto) {
+        return userRepository.save(userMapper.toEntity(userDto));
     }
 }
 

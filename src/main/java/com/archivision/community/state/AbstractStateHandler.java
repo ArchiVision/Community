@@ -1,5 +1,6 @@
 package com.archivision.community.state;
 
+import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
@@ -13,6 +14,7 @@ public abstract class AbstractStateHandler implements StateHandler, Validatable 
     protected final UserService userService;
     protected final MessageSender messageSender;
     protected final KeyboardBuilderService keyboardBuilder;
+    protected final ActiveRegistrationProcessCache registrationProcessCache;
 
     public void handle(Message message) {
         if (isValidatable()) {

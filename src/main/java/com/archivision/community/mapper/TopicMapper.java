@@ -2,9 +2,10 @@ package com.archivision.community.mapper;
 
 import com.archivision.community.dto.TopicDto;
 import com.archivision.community.entity.Topic;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TopicMapper {
-
     public TopicDto toDto(Topic topic) {
         TopicDto topicDto = new TopicDto();
         topicDto.setId(topic.getId().toString());

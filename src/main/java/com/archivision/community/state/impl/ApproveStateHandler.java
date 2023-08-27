@@ -1,8 +1,10 @@
 package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
+import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.cache.ActiveViewingData;
 import com.archivision.community.command.ResponseTemplate;
+import com.archivision.community.dto.UserDto;
 import com.archivision.community.matcher.MatchedUsersListResolver;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
@@ -24,14 +26,17 @@ public class ApproveStateHandler extends AbstractStateHandler {
     private final MatchedUsersListResolver matchedUsersListResolver;
     private final RedisTemplate<Long, String> redisTemplate;
     private final ActiveViewingData activeViewingData;
+    private final ActiveRegistrationProcessCache registrationProcessCache;
 
     public ApproveStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                               KeyboardBuilderService keyboardBuilder, ProfileSender profileSender, MatchedUsersListResolver matchedUsersListResolver, RedisTemplate<Long, String> redisTemplate, ActiveViewingData activeViewingData) {
-        super(inputValidator, userService, messageSender, keyboardBuilder);
+                               KeyboardBuilderService keyboardBuilder, ProfileSender profileSender, MatchedUsersListResolver matchedUsersListResolver, RedisTemplate<Long, String> redisTemplate, ActiveViewingData activeViewingData,
+                               ActiveRegistrationProcessCache registrationProcessCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
         this.profileSender = profileSender;
         this.matchedUsersListResolver = matchedUsersListResolver;
         this.redisTemplate = redisTemplate;
         this.activeViewingData = activeViewingData;
+        this.registrationProcessCache = registrationProcessCache;
     }
 
     @Override
@@ -39,8 +44,10 @@ public class ApproveStateHandler extends AbstractStateHandler {
         Long chatId = message.getChatId();
         String messageText = message.getText();
         if (messageText.equals("Так")) {
-            profileSender.showProfile(chatId);
             changeStateToMatch(chatId);
+            UserDto userDto = registrationProcessCache.remove(chatId);
+            userService.saveUser(userDto);
+            profileSender.showProfile(chatId);
             profileSender.sendNextProfile(chatId);
         } else if (messageText.equals("Змінити")){
             changeStateToName(chatId);
@@ -50,12 +57,12 @@ public class ApproveStateHandler extends AbstractStateHandler {
     }
 
     private void changeStateToName(Long chatId) {
-        userService.changeState(chatId, State.NAME);
+        registrationProcessCache.getCurrentUser(chatId).setState(State.NAME);
         messageSender.sendTextMessage(chatId, ResponseTemplate.NAME_INPUT);
     }
 
     private void changeStateToMatch(Long chatId) {
-        userService.changeState(chatId, State.MATCH);
+        registrationProcessCache.getCurrentUser(chatId).setState(State.MATCH);
         messageSender.sendMsgWithMarkup(chatId, "Пошук", ReplyKeyboardMarkup.builder()
                         .resizeKeyboard(true)
                         .keyboardRow(new KeyboardRow(){{

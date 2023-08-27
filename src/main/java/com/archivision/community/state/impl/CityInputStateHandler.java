@@ -1,7 +1,9 @@
 package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
+import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
+import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
@@ -18,8 +20,8 @@ import static com.archivision.community.bot.State.TOPIC;
 @Slf4j
 public class CityInputStateHandler extends AbstractStateHandler {
     public CityInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                                 KeyboardBuilderService keyboardBuilderService) {
-        super(inputValidator, userService, messageSender, keyboardBuilderService);
+                                 KeyboardBuilderService keyboardBuilderService, ActiveRegistrationProcessCache registrationProcessCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilderService, registrationProcessCache);
     }
 
     private static final String ERROR_CITY = "Такого міста не існує або ми ще його не додали. Сорі :(";
@@ -27,11 +29,10 @@ public class CityInputStateHandler extends AbstractStateHandler {
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
+        UserDto user = registrationProcessCache.getCurrentUser(chatId);
         String messageText = message.getText();
-        User user = userService.getUserByTgId(chatId);
         user.setState(TOPIC);
         user.setCity(messageText);
-        userService.updateUser(user);
         messageSender.sendMsgWithMarkup(message.getChatId(), ResponseTemplate.TOPICS_INPUT,
                 keyboardBuilder.generateSkipButton());
     }

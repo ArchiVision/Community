@@ -17,4 +17,8 @@ public class ActiveRegistrationProcessCache extends ConcurrentHashMapCacheServic
                 new MissingTelegramIdException("UserDto has no telegram id to be putted in cache"));
         cache.put(telegramId, userDto);
     }
+
+    public UserDto getCurrentUser(Long tgId) {
+        return get(tgId).orElseThrow(() -> new RuntimeException("No user in cache with id=" + tgId));
+    }
 }

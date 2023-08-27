@@ -1,9 +1,10 @@
 package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
+import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
+import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.Gender;
-import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
@@ -18,8 +19,9 @@ import java.util.Set;
 @Component
 @Slf4j
 public class GenderInputStateHandler extends AbstractStateHandler  {
-    public GenderInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender, KeyboardBuilderService keyboardBuilder) {
-        super(inputValidator, userService, messageSender, keyboardBuilder);
+    public GenderInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
+                                   KeyboardBuilderService keyboardBuilder, ActiveRegistrationProcessCache registrationProcessCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
     }
 
     private static final Set<String> options = Set.of("Хлопець", "Дівчина", "Інше");
@@ -27,11 +29,10 @@ public class GenderInputStateHandler extends AbstractStateHandler  {
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
+        UserDto user = registrationProcessCache.getCurrentUser(chatId);
         String messageText = message.getText();
-        User user = userService.getUserByTgId(chatId);
         user.setState(State.LOOKING);
         user.setGender(Gender.fromString(messageText));
-        userService.updateUser(user);
         messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.LOOKING_FOR_INPUT,
                 keyboardBuilder.generateLookingGenderButtons());
     }

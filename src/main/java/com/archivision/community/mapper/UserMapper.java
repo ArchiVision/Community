@@ -1,6 +1,5 @@
 package com.archivision.community.mapper;
 
-import com.archivision.community.bot.State;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +20,10 @@ public class UserMapper {
         userDto.setDescription(user.getDescription());
         userDto.setAge(user.getAge());
         userDto.setState(user.getState());
+        userDto.setUsername(user.getUsername());
+        userDto.setGender(user.getGender());
+        userDto.setLookingFor(user.getLookingFor());
+        userDto.setPhotoId(userDto.getPhotoId());
         user.getTopics().forEach(topic -> userDto.getTopics().add(topicMapper.toDto(topic)));
         return userDto;
     }
@@ -34,6 +37,10 @@ public class UserMapper {
         user.setDescription(userDto.getDescription());
         user.setAge(userDto.getAge());
         user.setState(userDto.getState());
+        user.setUsername(userDto.getUsername());
+        user.setGender(userDto.getGender());
+        user.setLookingFor(userDto.getLookingFor());
+        user.setPhotoId(userDto.getPhotoId());
         userDto.getTopics().forEach(topicDto -> user.getTopics().add(topicMapper.toEntity(topicDto)));
         return user;
     }
