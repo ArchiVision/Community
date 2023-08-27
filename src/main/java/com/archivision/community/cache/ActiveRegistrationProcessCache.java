@@ -11,10 +11,14 @@ import java.util.Optional;
  * Ideally, it's better to use Redis/Hazelcast/EhCache.
  */
 @Component
-public class ActiveUserFillingDataCache extends ConcurrentHashMapCacheService<Long, UserDto> {
+public class ActiveRegistrationProcessCache extends ConcurrentHashMapCacheService<Long, UserDto> {
     public void put(UserDto userDto) {
         Long telegramId = Optional.ofNullable(userDto.getTelegramUserId()).orElseThrow(() ->
                 new MissingTelegramIdException("UserDto has no telegram id to be putted in cache"));
         cache.put(telegramId, userDto);
+    }
+
+    public UserDto getCurrentUser(Long tgId) {
+        return get(tgId).orElseThrow(() -> new RuntimeException("No user in cache with id=" + tgId));
     }
 }

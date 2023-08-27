@@ -1,11 +1,13 @@
-package com.archivision.community.state.input.impl;
+package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
+import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
+import com.archivision.community.dto.TopicDto;
+import com.archivision.community.dto.UserDto;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
-import com.archivision.community.service.UserTopicService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.state.OptionalState;
 import com.archivision.community.util.InputValidator;
@@ -15,24 +17,24 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Set;
 
+import static com.archivision.community.bot.State.APPROVE;
 import static com.archivision.community.bot.State.DESCRIPTION;
 
 @Component
 @Slf4j
 public class TopicsInputStateHandler extends AbstractStateHandler implements OptionalState {
-    private final UserTopicService userTopicService;
 
     public TopicsInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                                   KeyboardBuilderService keyboardBuilderService, UserTopicService userTopicService) {
-        super(inputValidator, userService, messageSender, keyboardBuilderService);
-        this.userTopicService = userTopicService;
+                                   KeyboardBuilderService keyboardBuilderService, ActiveRegistrationProcessCache registrationProcessCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilderService, registrationProcessCache);
     }
 
     @Override
     public void doHandle(Message message) {
-        String messageText = message.getText();
         Long chatId = message.getChatId();
-        userTopicService.addTopicToUser(chatId, messageText);
+        UserDto user = registrationProcessCache.getCurrentUser(chatId);
+        String messageText = message.getText();
+        user.getTopics().add(new TopicDto().setName(messageText));
         log.info("topic={}", messageText);
         messageSender.sendMsgWithMarkup(chatId, "Ще одну тему?", keyboardBuilder.buildButtonWithText("Завершити"));
     }
@@ -71,7 +73,7 @@ public class TopicsInputStateHandler extends AbstractStateHandler implements Opt
     @Override
     public void changeToNextState(Long chatId) {
         NextStateData nextState = getNextState();
-        userService.changeState(chatId, nextState.state());
+        registrationProcessCache.getCurrentUser(chatId).setState(nextState.state());
         messageSender.sendNextStateData(chatId, nextState);
     }
 

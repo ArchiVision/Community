@@ -1,9 +1,10 @@
-package com.archivision.community.state.input.impl;
+package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
+import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
+import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.Gender;
-import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
@@ -17,27 +18,28 @@ import java.util.Set;
 
 @Component
 @Slf4j
-public class LookingForInoutStateHandler extends AbstractStateHandler  {
-    public LookingForInoutStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender, KeyboardBuilderService keyboardBuilder) {
-        super(inputValidator, userService, messageSender, keyboardBuilder);
+public class GenderInputStateHandler extends AbstractStateHandler  {
+    public GenderInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
+                                   KeyboardBuilderService keyboardBuilder, ActiveRegistrationProcessCache registrationProcessCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
     }
 
-    private static final Set<String> options = Set.of("Хлопців", "Дівчат", "Все одно");
+    private static final Set<String> options = Set.of("Хлопець", "Дівчина", "Інше");
 
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
+        UserDto user = registrationProcessCache.getCurrentUser(chatId);
         String messageText = message.getText();
-        User user = userService.getUserByTgId(chatId);
-        user.setState(State.CITY);
-        user.setLookingFor(Gender.fromString(messageText));
-        userService.updateUser(user);
-        messageSender.sendTextMessage(chatId, ResponseTemplate.CITY_INPUT);
+        user.setState(State.LOOKING);
+        user.setGender(Gender.fromString(messageText));
+        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.LOOKING_FOR_INPUT,
+                keyboardBuilder.generateLookingGenderButtons());
     }
 
     @Override
     public void onValidationError(Message message) {
-        log.error("Smth go wrong={}", message.getText());
+        log.error("Smth went wrong. Message(gender)={}", message.getText());
     }
 
     @Override
@@ -47,7 +49,7 @@ public class LookingForInoutStateHandler extends AbstractStateHandler  {
 
     @Override
     public State getStateType() {
-        return State.LOOKING;
+        return State.GENDER;
     }
 
     @Override

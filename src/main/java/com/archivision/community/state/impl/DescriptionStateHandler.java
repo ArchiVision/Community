@@ -1,8 +1,8 @@
-package com.archivision.community.state.input.impl;
+package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
+import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
-import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
@@ -20,19 +20,19 @@ import static com.archivision.community.bot.State.PHOTO;
 public class DescriptionStateHandler extends AbstractStateHandler implements OptionalState {
 
     public DescriptionStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                                   KeyboardBuilderService keyboardBuilder) {
-        super(inputValidator, userService, messageSender, keyboardBuilder);
+                                   KeyboardBuilderService keyboardBuilder, ActiveRegistrationProcessCache registrationProcessCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
     }
 
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
-        String messageText = message.getText();
-        User user = userService.getUserByTgId(chatId);
-        user.setState(PHOTO);
-        user.setDescription(messageText);
-        userService.updateUser(user);
-        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.PHOTO, keyboardBuilder.generateSkipButton());
+        registrationProcessCache.get(chatId).ifPresent(user -> {
+            String messageText = message.getText();
+            user.setState(PHOTO);
+            user.setDescription(messageText);
+            messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.PHOTO, keyboardBuilder.generateSkipButton());
+        });
     }
 
     private boolean isAbleToEnterDesc(Long chatId, String messageText) {
@@ -67,9 +67,9 @@ public class DescriptionStateHandler extends AbstractStateHandler implements Opt
 
     @Override
     public void changeToNextState(Long chatId) {
-        NextStateData nextStateData = getNextState();
-        userService.changeState(chatId, nextStateData.state());
-        messageSender.sendNextStateData(chatId, nextStateData);
+        NextStateData nextState = getNextState();
+        registrationProcessCache.getCurrentUser(chatId).setState(nextState.state());
+        messageSender.sendNextStateData(chatId, nextState);
     }
 
     @Override

@@ -51,10 +51,10 @@ public class ProfileSender {
     private Optional<User> giveUserPersonList(Long chatId) {
         User user = userService.getUserByTgId(chatId);
         List<User> allUsers = userService.findAllExceptId(chatId);
-        List<User> orderedMatchingList = matchedUsersListResolver.getOrderedMatchingList(user, allUsers).stream()
-                .map(UserWithMatchedProbability::user)
-                .toList();
-        return orderedMatchingList.size() > 0 ? Optional.of(orderedMatchingList.get(0)) : Optional.empty();
+//        List<User> orderedMatchingList = matchedUsersListResolver.getOrderedMatchingList(user, allUsers).stream()
+//                .map(UserWithMatchedProbability::user)
+//                .toList();
+        return allUsers.size() > 0 ? Optional.of(allUsers.get(0)) : Optional.empty();
     }
 
     public void showProfile(Long selfChatId) {

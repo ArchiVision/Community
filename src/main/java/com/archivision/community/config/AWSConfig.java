@@ -10,7 +10,6 @@ import software.amazon.awssdk.services.s3.S3AsyncClient;
 
 @Configuration
 public class AWSConfig {
-
     @Value("${amazon.s3.access-key}")
     private String accessKey;
 
