@@ -4,7 +4,6 @@ import com.archivision.community.cache.ActiveViewingData;
 import com.archivision.community.entity.Topic;
 import com.archivision.community.entity.User;
 import com.archivision.community.matcher.MatchedUsersListResolver;
-import com.archivision.community.matcher.model.UserWithMatchedProbability;
 import com.archivision.community.messagesender.MessageSender;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,15 +26,14 @@ public class ProfileSender {
     private final MatchedUsersListResolver matchedUsersListResolver;
     private final ActiveViewingData activeViewingData;
 
-    public void showProfileOfUserTo(Long chatId, Long userTo) {
+    public void showUserProfileTo(Long chatId, Long userTo) {
         User user = userService.getUserByTgId(chatId);
         String formattedProfileText = getFormattedProfileText(user);
         if (Objects.equals(chatId, userTo)) {
             messageSender.sendTextMessage(userTo, "Твоя анкета:");
         }
         boolean hasPhoto = !(user.getPhotoId() == null);
-        telegramImageS3Service.sendImageOfUserToUser(chatId, userTo, hasPhoto);
-        messageSender.sendTextMessage(userTo, formattedProfileText);
+        telegramImageS3Service.sendImageOfUserToUser(chatId, userTo, hasPhoto, formattedProfileText);
         log.info("showing profile");
     }
 
@@ -43,7 +41,7 @@ public class ProfileSender {
         giveUserPersonList(chatId)
                 .ifPresentOrElse(user -> {
                     activeViewingData.put(chatId, user.getTelegramUserId());
-                    showProfileOfUserTo(user.getTelegramUserId(), chatId);
+                    showUserProfileTo(user.getTelegramUserId(), chatId);
                 }, () -> messageSender.sendTextMessage(chatId, "Анкети закінчилися :("));
     }
 
@@ -58,7 +56,7 @@ public class ProfileSender {
     }
 
     public void showProfile(Long selfChatId) {
-        showProfileOfUserTo(selfChatId, selfChatId);
+        showUserProfileTo(selfChatId, selfChatId);
     }
 
     private String getFormattedProfileText(User user) {
@@ -69,11 +67,12 @@ public class ProfileSender {
             Теми: %s
                         
             Опис: %s
-            """.formatted(user.getName(), user.getAge(), user.getCity(), formatTopics(user.getTopics()), user.getDescription() == null ? "пусто" : user.getDescription());
+            """.formatted(user.getName(), user.getAge(), user.getCity(), formatTopics(user.getTopics()), user.getDescription() == null ? "*пусто*" : user.getDescription());
         return formattedProfileText;
     }
 
     private String formatTopics(Set<Topic> topics) {
-        return  "{" + topics.stream().map(Topic::getName).collect(Collectors.joining(",")) + "}";
+        return topics.isEmpty() ? "*відсутні*" :
+                topics.stream().map(Topic::getName).collect(Collectors.joining(", "));
     }
 }

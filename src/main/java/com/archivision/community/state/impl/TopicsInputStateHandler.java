@@ -46,7 +46,7 @@ public class TopicsInputStateHandler extends AbstractStateHandler implements Opt
     }
 
     @Override
-    public boolean valid(Message message) {
+    public boolean isInputValid(Message message) {
         boolean ableToInputTopic = isAbleToInputTopic(message.getChatId(), message.getText());
         return ableToInputTopic && inputValidator.isTopicValid(message.getText());
     }
@@ -66,7 +66,7 @@ public class TopicsInputStateHandler extends AbstractStateHandler implements Opt
     }
 
     @Override
-    public State getStateType() {
+    public State getState() {
         return State.TOPIC;
     }
 
@@ -83,7 +83,7 @@ public class TopicsInputStateHandler extends AbstractStateHandler implements Opt
     }
 
     @Override
-    public boolean isValidatable() {
+    public boolean shouldValidateInput() {
         return true;
     }
 }

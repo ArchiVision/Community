@@ -9,24 +9,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.archivision.community.model.Reply.*;
+
 @Component
 public class KeyboardBuilderService {
-
-    private static final String SKIP = "Пропустити";
-    private static final String YES = "Так";
-    private static final String CHANGE = "Змінити";
 
     public ReplyKeyboardMarkup generateSkipButton() {
         return ReplyKeyboardMarkup.builder()
                 .keyboardRow(new KeyboardRow(Collections.singleton(KeyboardButton.builder()
-                        .text(SKIP)
+                        .text(SKIP.toString())
                         .build())))
                 .resizeKeyboard(true)
                 .build();
     }
 
     public ReplyKeyboardMarkup generateGenderButtons() {
-        return generateMultiButtons("Хлопець", "Дівчина", "Інше");
+        return generateMultiButtons(MAN.toString(), GIRL.toString(), OTHER.toString());
     }
 
     public ReplyKeyboardMarkup generateLookingGenderButtons() {
@@ -43,7 +41,7 @@ public class KeyboardBuilderService {
     }
 
     public ReplyKeyboardMarkup generateApprovalButtons() {
-        return generateMultiButtons(YES, CHANGE);
+        return generateMultiButtons(YES.toString(), CHANGE.toString());
     }
 
     private KeyboardButton buttonWith(String text) {

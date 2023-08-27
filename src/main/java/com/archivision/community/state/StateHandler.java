@@ -5,5 +5,5 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 public interface StateHandler {
     void handle(Message message);
-    State getStateType();
+    State getState();
 }

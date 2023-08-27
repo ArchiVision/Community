@@ -44,17 +44,17 @@ public class CityInputStateHandler extends AbstractStateHandler {
     }
 
     @Override
-    public boolean valid(Message message) {
+    public boolean isInputValid(Message message) {
         return inputValidator.isCityValid(message.getText());
     }
 
     @Override
-    public State getStateType() {
+    public State getState() {
         return State.CITY;
     }
 
     @Override
-    public boolean isValidatable() {
+    public boolean shouldValidateInput() {
         return true;
     }
 }

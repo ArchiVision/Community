@@ -5,53 +5,38 @@ import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.cache.ActiveViewingData;
 import com.archivision.community.matcher.MatchedUsersListResolver;
 import com.archivision.community.messagesender.MessageSender;
-import com.archivision.community.service.KeyboardBuilderService;
-import com.archivision.community.service.ProfileSender;
-import com.archivision.community.service.UserLikeService;
-import com.archivision.community.service.UserService;
+import com.archivision.community.model.Reply;
+import com.archivision.community.service.*;
 import com.archivision.community.state.AbstractStateHandler;
+import com.archivision.community.state.WithReplyOptions;
 import com.archivision.community.util.InputValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import java.util.Optional;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
-public class MatchStateHandler extends AbstractStateHandler {
-    private final MatchedUsersListResolver matchedUsersListResolver;
-    private final ActiveViewingData activeViewingData;
-    private final UserLikeService userLikeService;
-    private final ProfileSender profileSender;
-    private static final Set<String> options = Set.of("+", "-");
+public class MatchStateHandler extends AbstractStateHandler implements WithReplyOptions {
+    private final UserInteractionService userInteractionService;
 
     public MatchStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                             KeyboardBuilderService keyboardBuilder, MatchedUsersListResolver matchedUsersListResolver, ActiveViewingData activeViewingData,
-                             UserLikeService userLikeService, ProfileSender profileSender, ActiveRegistrationProcessCache registrationProcessCache) {
+                             KeyboardBuilderService keyboardBuilder, ActiveRegistrationProcessCache registrationProcessCache,
+                             UserInteractionService userLikeService) {
         super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
-
-        this.matchedUsersListResolver = matchedUsersListResolver;
-        this.activeViewingData = activeViewingData;
-        this.userLikeService = userLikeService;
-        this.profileSender = profileSender;
+        this.userInteractionService = userLikeService;
     }
 
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
         if (isLikedButtonPressed(message.getText())) {
-            log.info("Like");
-            Optional<Long> viewingUser = activeViewingData.get(message.getChatId());
-            viewingUser.ifPresent(checkingThisUser -> {
-                activeViewingData.remove(chatId);
-                userLikeService.like(chatId, checkingThisUser);
-            });
-            profileSender.sendNextProfile(chatId);
+            userInteractionService.handleLikeAction(chatId);
         } else {
-            log.info("dislike");
-            // smth else
+            userInteractionService.handleDislikeAction(chatId);
         }
     }
 
@@ -61,21 +46,26 @@ public class MatchStateHandler extends AbstractStateHandler {
     }
 
     @Override
-    public boolean valid(Message message) {
-        return options.contains(message.getText());
+    public boolean isInputValid(Message message) {
+        return getOptions().contains(message.getText());
     }
 
     @Override
-    public State getStateType() {
+    public State getState() {
         return State.MATCH;
     }
 
     @Override
-    public boolean isValidatable() {
+    public boolean shouldValidateInput() {
         return true;
     }
 
     public boolean isLikedButtonPressed(String msg) {
         return "+".equals(msg);
+    }
+
+    @Override
+    public Set<String> getOptions() {
+        return Set.of(Reply.LIKE.toString(), Reply.DISLIKE.toString());
     }
 }

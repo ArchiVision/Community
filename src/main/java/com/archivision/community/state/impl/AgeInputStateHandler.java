@@ -41,17 +41,17 @@ public class AgeInputStateHandler extends AbstractStateHandler {
     }
 
     @Override
-    public boolean valid(Message message) {
+    public boolean isInputValid(Message message) {
         return inputValidator.isAgeValid(message.getText());
     }
 
     @Override
-    public State getStateType() {
+    public State getState() {
         return State.AGE;
     }
 
     @Override
-    public boolean isValidatable() {
+    public boolean shouldValidateInput() {
         return true;
     }
 }

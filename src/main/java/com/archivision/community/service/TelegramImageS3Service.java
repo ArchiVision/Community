@@ -47,6 +47,10 @@ public class TelegramImageS3Service {
      * @param chatId user's chat id. Will be used to generate key to get it from S3 bucket
      */
     public void sendImageOfUserToUser(Long userId, Long toUser, boolean hasPhoto) {
+        sendImageOfUserToUser(userId, toUser, hasPhoto, null);
+    }
+
+    public void sendImageOfUserToUser(Long userId, Long toUser, boolean hasPhoto, String caption) {
         String pictureKey = generateUserAvatarKey(userId);
         byte[] image = defaultImageBytes;
         if (hasPhoto) {
@@ -54,6 +58,9 @@ public class TelegramImageS3Service {
         }
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setChatId(toUser);
+        if (caption != null) {
+            sendPhoto.setCaption(caption);
+        }
         InputFile inputFile = new InputFile();
         InputStream inputStream = new ByteArrayInputStream(image);
         inputFile.setMedia(inputStream, PICTURE_PATH + pictureKey);

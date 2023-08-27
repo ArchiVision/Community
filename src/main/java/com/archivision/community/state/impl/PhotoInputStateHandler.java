@@ -48,7 +48,7 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
     }
 
     @Override
-    public boolean valid(Message message) {
+    public boolean isInputValid(Message message) {
         boolean ableToSendPhoto = isAbleToSendPhoto(message.getChatId(), message.getText());
         return ableToSendPhoto && message.hasPhoto();
     }
@@ -59,12 +59,12 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
     }
 
     @Override
-    public State getStateType() {
+    public State getState() {
         return State.PHOTO;
     }
 
     @Override
-    public boolean isValidatable() {
+    public boolean shouldValidateInput() {
         return true;
     }
 

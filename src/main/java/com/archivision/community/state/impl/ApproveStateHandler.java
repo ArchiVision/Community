@@ -7,6 +7,7 @@ import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.matcher.MatchedUsersListResolver;
 import com.archivision.community.messagesender.MessageSender;
+import com.archivision.community.model.Reply;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.ProfileSender;
 import com.archivision.community.service.UserService;
@@ -66,19 +67,19 @@ public class ApproveStateHandler extends AbstractStateHandler {
         messageSender.sendMsgWithMarkup(chatId, "Пошук", ReplyKeyboardMarkup.builder()
                         .resizeKeyboard(true)
                         .keyboardRow(new KeyboardRow(){{
-                            add("+");
-                            add("-");
+                            add(Reply.YES.toString());
+                            add(Reply.NO.toString());
                         }})
                 .build());
     }
 
     @Override
-    public State getStateType() {
+    public State getState() {
         return State.APPROVE;
     }
 
     @Override
-    public boolean isValidatable() {
+    public boolean shouldValidateInput() {
         return false;
     }
 }

@@ -55,13 +55,13 @@ public class DescriptionStateHandler extends AbstractStateHandler implements Opt
     }
 
     @Override
-    public boolean valid(Message message) {
+    public boolean isInputValid(Message message) {
         boolean ableToEnter = isAbleToEnterDesc(message.getChatId(), message.getText());
         return ableToEnter && inputValidator.isDescriptionValid(message.getText());
     }
 
     @Override
-    public State getStateType() {
+    public State getState() {
         return State.DESCRIPTION;
     }
 
@@ -78,7 +78,7 @@ public class DescriptionStateHandler extends AbstractStateHandler implements Opt
     }
 
     @Override
-    public boolean isValidatable() {
+    public boolean shouldValidateInput() {
         return true;
     }
 }

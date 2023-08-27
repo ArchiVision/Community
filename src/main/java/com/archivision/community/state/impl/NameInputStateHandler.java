@@ -41,17 +41,17 @@ public class NameInputStateHandler extends AbstractStateHandler {
     }
 
     @Override
-    public boolean valid(Message message) {
+    public boolean isInputValid(Message message) {
         return inputValidator.isNameValid(message.getText());
     }
 
     @Override
-    public State getStateType() {
+    public State getState() {
         return State.NAME;
     }
 
     @Override
-    public boolean isValidatable() {
+    public boolean shouldValidateInput() {
         return true;
     }
 }

@@ -29,7 +29,7 @@ public class AppConfig {
     public Map<State, StateHandler> stateStateHandlerMap() {
         Map<State, StateHandler> map = new HashMap<>();
         for (StateHandler stateHandler : stateHandlers) {
-            map.put(stateHandler.getStateType(), stateHandler);
+            map.put(stateHandler.getState(), stateHandler);
         }
         return map;
     }

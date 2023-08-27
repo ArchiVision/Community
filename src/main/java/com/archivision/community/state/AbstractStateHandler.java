@@ -17,8 +17,8 @@ public abstract class AbstractStateHandler implements StateHandler, Validatable 
     protected final ActiveRegistrationProcessCache registrationProcessCache;
 
     public void handle(Message message) {
-        if (isValidatable()) {
-            if (!valid(message)) {
+        if (shouldValidateInput()) {
+            if (!isInputValid(message)) {
                 onValidationError(message);
                 return;
             }
@@ -29,7 +29,7 @@ public abstract class AbstractStateHandler implements StateHandler, Validatable 
     public void onValidationError(Message message) {
         // default impl
     }
-    public boolean valid(Message message) {
+    public boolean isInputValid(Message message) {
         // default impl
         return false;
     }

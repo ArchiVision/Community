@@ -18,9 +18,9 @@ public class NotificationService {
         User likedUser = userService.getUserByTgId(likedId);
 
         messageSender.sendTextMessage(likedId, "У вас симпатія! @"+likerUser.getUsername());
-        profileSender.showProfileOfUserTo(likerId, likedId);
+        profileSender.showUserProfileTo(likerId, likedId);
 
         messageSender.sendTextMessage(likerId, "У вас симпатія! @"+likedUser.getUsername());
-        profileSender.showProfileOfUserTo(likedId, likerId);
+        profileSender.showUserProfileTo(likedId, likerId);
     }
 }

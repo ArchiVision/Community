@@ -8,6 +8,9 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Map;
 
+/**
+ * General handler that define specific message strategy(text/photo) to process a message
+ */
 @Component
 @Slf4j
 @RequiredArgsConstructor
