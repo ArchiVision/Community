@@ -1,4 +1,4 @@
-package com.archivision.community.state.input.impl;
+package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
 import com.archivision.community.cache.ActiveViewingData;
@@ -39,7 +39,7 @@ public class MatchStateHandler extends AbstractStateHandler {
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
-        if (isLiked(message.getText())) {
+        if (isLikedButtonPressed(message.getText())) {
             log.info("Like");
             Optional<Long> viewingUser = activeViewingData.get(message.getChatId());
             viewingUser.ifPresent(checkingThisUser -> {
@@ -73,7 +73,7 @@ public class MatchStateHandler extends AbstractStateHandler {
         return true;
     }
 
-    public boolean isLiked(String msg) {
+    public boolean isLikedButtonPressed(String msg) {
         return "+".equals(msg);
     }
 }

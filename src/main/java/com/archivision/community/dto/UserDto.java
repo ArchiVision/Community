@@ -1,5 +1,6 @@
 package com.archivision.community.dto;
 
+import com.archivision.community.bot.State;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -13,6 +14,6 @@ public class UserDto {
     private String city;
     private String description;
     private Long age;
-    private String state;
+    private State state;
     private List<TopicDto> topics = new ArrayList<>();
 }

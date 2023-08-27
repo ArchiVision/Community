@@ -1,4 +1,4 @@
-package com.archivision.community.state.input.impl;
+package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
 import com.archivision.community.cache.ActiveViewingData;

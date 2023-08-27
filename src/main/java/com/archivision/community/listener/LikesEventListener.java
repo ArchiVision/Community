@@ -12,11 +12,12 @@ import org.springframework.stereotype.Component;
 public class LikesEventListener {
     private final UserLikeService userLikeService;
     private final NotificationService notificationService;
+
     @RabbitListener(queues = "like-events")
-    public void handleLike(Like like) {
-        boolean match = userLikeService.existsReverseLike(like.liker(), like.liked());
+    public void handleLike(Like likeEvent) {
+        boolean match = userLikeService.existsReverseLike(likeEvent.liker(), likeEvent.liked());
         if (match) {
-            notificationService.notifyUsersAboutMatch(like.liker(), like.liked());
+            notificationService.notifyUsersAboutMatch(likeEvent.liker(), likeEvent.liked());
         }
     }
 }

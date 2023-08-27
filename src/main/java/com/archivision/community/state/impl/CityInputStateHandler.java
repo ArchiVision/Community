@@ -1,4 +1,4 @@
-package com.archivision.community.state.input.impl;
+package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
 import com.archivision.community.command.ResponseTemplate;
@@ -12,41 +12,44 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import static com.archivision.community.bot.State.AGE;
+import static com.archivision.community.bot.State.TOPIC;
 
 @Component
 @Slf4j
-public class NameInputStateHandler extends AbstractStateHandler {
-    private static final String ERROR_NAME = "Щось не так з ім'ям. Спробуй ще раз";
-
-    public NameInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender, KeyboardBuilderService keyboardBuilder) {
-        super(inputValidator, userService, messageSender, keyboardBuilder);
+public class CityInputStateHandler extends AbstractStateHandler {
+    public CityInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
+                                 KeyboardBuilderService keyboardBuilderService) {
+        super(inputValidator, userService, messageSender, keyboardBuilderService);
     }
+
+    private static final String ERROR_CITY = "Такого міста не існує або ми ще його не додали. Сорі :(";
 
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
         String messageText = message.getText();
         User user = userService.getUserByTgId(chatId);
-        user.setState(AGE);
-        user.setName(messageText);
+        user.setState(TOPIC);
+        user.setCity(messageText);
         userService.updateUser(user);
-        messageSender.sendTextMessage(chatId, ResponseTemplate.AGE_INPUT);
+        messageSender.sendMsgWithMarkup(message.getChatId(), ResponseTemplate.TOPICS_INPUT,
+                keyboardBuilder.generateSkipButton());
     }
 
     @Override
     public void onValidationError(Message message) {
-        messageSender.sendTextMessage(message.getChatId(), ERROR_NAME);
+        log.error("Місто={} не знайдено", message.getText());
+        messageSender.sendTextMessage(message.getChatId(), ERROR_CITY);
     }
 
     @Override
     public boolean valid(Message message) {
-        return inputValidator.isNameValid(message.getText());
+        return inputValidator.isCityValid(message.getText());
     }
 
     @Override
     public State getStateType() {
-        return State.NAME;
+        return State.CITY;
     }
 
     @Override

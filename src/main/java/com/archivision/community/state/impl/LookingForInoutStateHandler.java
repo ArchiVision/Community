@@ -1,4 +1,4 @@
-package com.archivision.community.state.input.impl;
+package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.State;
 import com.archivision.community.command.ResponseTemplate;
@@ -17,28 +17,27 @@ import java.util.Set;
 
 @Component
 @Slf4j
-public class GenderInputStateHandler extends AbstractStateHandler  {
-    public GenderInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender, KeyboardBuilderService keyboardBuilder) {
+public class LookingForInoutStateHandler extends AbstractStateHandler  {
+    public LookingForInoutStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender, KeyboardBuilderService keyboardBuilder) {
         super(inputValidator, userService, messageSender, keyboardBuilder);
     }
 
-    private static final Set<String> options = Set.of("Хлопець", "Дівчина", "Інше");
+    private static final Set<String> options = Set.of("Хлопців", "Дівчат", "Все одно");
 
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
         String messageText = message.getText();
         User user = userService.getUserByTgId(chatId);
-        user.setState(State.LOOKING);
-        user.setGender(Gender.fromString(messageText));
+        user.setState(State.CITY);
+        user.setLookingFor(Gender.fromString(messageText));
         userService.updateUser(user);
-        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.LOOKING_FOR_INPUT,
-                keyboardBuilder.generateLookingGenderButtons());
+        messageSender.sendTextMessage(chatId, ResponseTemplate.CITY_INPUT);
     }
 
     @Override
     public void onValidationError(Message message) {
-        log.error("Smth went wrong. Message(gender)={}", message.getText());
+        log.error("Smth go wrong={}", message.getText());
     }
 
     @Override
@@ -48,7 +47,7 @@ public class GenderInputStateHandler extends AbstractStateHandler  {
 
     @Override
     public State getStateType() {
-        return State.GENDER;
+        return State.LOOKING;
     }
 
     @Override
