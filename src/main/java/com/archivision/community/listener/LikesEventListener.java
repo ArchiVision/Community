@@ -1,6 +1,6 @@
 package com.archivision.community.listener;
 
-import com.archivision.community.event.Like;
+import com.archivision.community.event.LikeEvent;
 import com.archivision.community.service.NotificationService;
 import com.archivision.community.service.UserLikeService;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,8 @@ public class LikesEventListener {
     private final NotificationService notificationService;
 
     @RabbitListener(queues = "like-events")
-    public void handleLike(Like likeEvent) {
-        boolean match = userLikeService.existsReverseLike(likeEvent.liker(), likeEvent.liked());
+    public void handleLike(LikeEvent likeEvent) {
+        boolean match = userLikeService.isReverseLikeExists(likeEvent.liker(), likeEvent.liked());
         if (match) {
             notificationService.notifyUsersAboutMatch(likeEvent.liker(), likeEvent.liked());
         }
