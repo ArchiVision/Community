@@ -13,6 +13,7 @@ public class NotificationService {
     private final MessageSender messageSender;
     private final UserService userService;
     private final ProfileSender profileSender;
+
     public void notifyUsersAboutMatch(Long likerId, Long likedId) {
         User likerUser = userService.getUserByTgId(likerId);
         User likedUser = userService.getUserByTgId(likedId);

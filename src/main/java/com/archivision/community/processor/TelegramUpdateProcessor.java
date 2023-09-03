@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
 
 @Component
 @RequiredArgsConstructor
@@ -20,11 +19,17 @@ public class TelegramUpdateProcessor implements UpdateProcessor {
 
     public void processUpdate(Update update) {
         log.info(String.valueOf(update));
+        checkForSpecialUpdates(update);
         if (update.hasMessage()) {
             messageHandlers.handle(update.getMessage());
-        } else if (update.hasCallbackQuery()) {
+        }
+        if (update.hasCallbackQuery()) {
             callbackHandler.handle(update.getCallbackQuery());
-        } else if (update.hasMyChatMember()) {
+        }
+    }
+
+    private void checkForSpecialUpdates(Update update) {
+        if (update.hasMyChatMember()) {
             ChatMemberUpdated chatMember = update.getMyChatMember();
             if (chatMember.getNewChatMember().getStatus().equals("kicked")) {
                 userService.deleteByTgId(chatMember.getFrom().getId());

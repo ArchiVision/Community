@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+// TODO: 03.09.2023 refactor service
+
 @Component
 @Slf4j
 public class TelegramImageS3Service {

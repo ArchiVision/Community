@@ -1,5 +1,6 @@
 package com.archivision.community.service;
 
+import com.archivision.community.model.Reply;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -24,11 +25,11 @@ public class KeyboardBuilderService {
     }
 
     public ReplyKeyboardMarkup generateGenderButtons() {
-        return generateMultiButtons(MAN.toString(), GIRL.toString(), OTHER.toString());
+        return generateMultiButtons(true, MAN.toString(), GIRL.toString(), OTHER.toString());
     }
 
     public ReplyKeyboardMarkup generateLookingGenderButtons() {
-        return generateMultiButtons("Хлопців", "Дівчат", "Все одно");
+        return generateMultiButtons(true, "Хлопців", "Дівчат", "Все одно");
     }
 
     public ReplyKeyboardMarkup buildButtonWithText(String text) {
@@ -41,7 +42,7 @@ public class KeyboardBuilderService {
     }
 
     public ReplyKeyboardMarkup generateApprovalButtons() {
-        return generateMultiButtons(YES.toString(), CHANGE.toString());
+        return generateMultiButtons(true, YES.toString(), CHANGE.toString());
     }
 
     private KeyboardButton buttonWith(String text) {
@@ -50,14 +51,18 @@ public class KeyboardBuilderService {
                 .build();
     }
 
-    public ReplyKeyboardMarkup generateMultiButtons(String ... buttonTexts) {
+    public ReplyKeyboardMarkup generateMultiButtons(boolean oneTime, String ... buttonTexts) {
         List<KeyboardButton> buttonList = Arrays.stream(buttonTexts)
                 .map(this::buttonWith)
                 .toList();
         return ReplyKeyboardMarkup.builder()
                 .keyboardRow(new KeyboardRow(buttonList))
-                .oneTimeKeyboard(true)
+                .oneTimeKeyboard(oneTime)
                 .resizeKeyboard(true)
                 .build();
+    }
+
+    public ReplyKeyboardMarkup generateMatchButtons() {
+        return generateMultiButtons(false, "+", "-");
     }
 }

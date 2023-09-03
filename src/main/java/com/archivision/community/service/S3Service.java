@@ -20,9 +20,9 @@ public class S3Service {
 
     public void uploadFile(String bucketName, String key, String path) {
         s3Client.putObject(req -> req.bucket(bucketName)
-                                        .key(key),
-                                AsyncRequestBody.fromFile(new File(path)))
-                        .join();
+                                .key(key),
+                        AsyncRequestBody.fromFile(new File(path)))
+                .join();
     }
 
     public void uploadFileAsBytes(String bucketName, String key, byte[] bytes) {

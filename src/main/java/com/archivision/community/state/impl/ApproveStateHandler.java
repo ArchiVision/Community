@@ -7,7 +7,6 @@ import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.matcher.MatchedUsersListResolver;
 import com.archivision.community.messagesender.MessageSender;
-import com.archivision.community.model.Reply;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.ProfileSender;
 import com.archivision.community.service.UserService;
@@ -17,8 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 @Component
 @Slf4j
@@ -64,13 +61,7 @@ public class ApproveStateHandler extends AbstractStateHandler {
 
     private void changeStateToMatch(Long chatId) {
         registrationProcessCache.getCurrentUser(chatId).setState(State.MATCH);
-        messageSender.sendMsgWithMarkup(chatId, "Пошук", ReplyKeyboardMarkup.builder()
-                        .resizeKeyboard(true)
-                        .keyboardRow(new KeyboardRow(){{
-                            add(Reply.YES.toString());
-                            add(Reply.NO.toString());
-                        }})
-                .build());
+        messageSender.sendMsgWithMarkup(chatId, "Пошук", keyboardBuilder.generateMatchButtons());
     }
 
     @Override
