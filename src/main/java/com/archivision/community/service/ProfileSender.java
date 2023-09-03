@@ -27,7 +27,7 @@ public class ProfileSender {
     private final ActiveViewingData activeViewingData;
 
     public void showUserProfileTo(Long chatId, Long userTo) {
-        User user = userService.getUserByTgId(chatId);
+        User user = userService.getUserByTgIdWithTopics(chatId);
         String formattedProfileText = getFormattedProfileText(user);
         if (Objects.equals(chatId, userTo)) {
             messageSender.sendTextMessage(userTo, "Твоя анкета:");
@@ -47,7 +47,7 @@ public class ProfileSender {
 
     @SneakyThrows
     private Optional<User> giveUserPersonList(Long chatId) {
-        User user = userService.getUserByTgId(chatId);
+        User user = userService.getUserByTgIdWithTopics(chatId);
         List<User> allUsers = userService.findAllExceptId(chatId);
 //        List<User> orderedMatchingList = matchedUsersListResolver.getOrderedMatchingList(user, allUsers).stream()
 //                .map(UserWithMatchedProbability::user)

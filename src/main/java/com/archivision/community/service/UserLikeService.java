@@ -17,7 +17,7 @@ public class UserLikeService {
     private final RabbitTemplate rabbitTemplate;
 
     @Value("${community.likes-queue}")
-    private final String likesEventQueue;
+    private String likesEventQueue;
 
     public void like(Long userId, Long userLikeId) {
         UserLike userLike = new UserLike();

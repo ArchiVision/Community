@@ -32,11 +32,14 @@ public class UserService {
         return userRepository.findByTelegramUserId(chatId);
     }
 
-    @Transactional
     public User getUserByTgId(Long chatId) {
-        User user = userRepository.findByTelegramUserId(chatId).get();
-        user.getTopics().contains("1"); // TODO: 27.08.2023 OMG, other way please :)
-        return user;
+        return userRepository.findByTelegramUserId(chatId).orElseThrow();
+        // TODO: 03.09.2023 custom exception
+    }
+
+    public User getUserByTgIdWithTopics(Long chatId) {
+        return userRepository.findByIdWithTopics(chatId).orElseThrow();
+        // TODO: 03.09.2023 custom exception
     }
 
     public List<User> findAllUsers(){

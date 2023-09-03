@@ -13,6 +13,7 @@ import java.util.Set;
 
 import static jakarta.persistence.CascadeType.MERGE;
 import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Table(name = "users")
@@ -39,7 +40,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private State state = State.START;
 
-    @ManyToMany(cascade = {PERSIST, MERGE})
+    @ManyToMany(cascade = {PERSIST, MERGE}, fetch = LAZY)
     @JoinTable(
             name = "user_topic",
             joinColumns = @JoinColumn(name = "user_id"),
