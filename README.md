@@ -67,10 +67,12 @@ This bot is designed to connect people based on their interests and preferences.
 - PostgreSQL
 - Redis
 - RabbitMQ
-- AWS S3
+- AWS (S3, EC2)
 - Maven
 - GitHub Actions
 - JUnit
+- Docker
+- Ngrok for building webhooks consumers and test bot without deploying
 
 ## License
 
