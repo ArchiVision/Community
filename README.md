@@ -4,6 +4,11 @@
 
 This bot is designed to connect people based on their interests and preferences. Built with Spring Boot and Java, the bot offers a range of features to enhance user interaction and community building.
 
+## Architecture / Working flow
+
+![bot_architecture](https://github.com/ArchiVision/Community/assets/72043323/fbbaadde-ebee-4bc3-bfba-61d191bd9f45)
+
+
 ## Dev Features
 
 - **User Registration**: Allows new users to register and create profiles.
