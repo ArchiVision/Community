@@ -6,7 +6,7 @@ This bot is designed to connect people based on their interests and preferences.
 
 ## Architecture / Working flow
 
-![bot_architecture](https://github.com/ArchiVision/Community/assets/72043323/fbbaadde-ebee-4bc3-bfba-61d191bd9f45)
+![bot_arch](https://github.com/ArchiVision/Community/assets/72043323/cb27c061-dedd-41a8-b8ce-e6bedeaa4ba1)
 
 
 ## Dev Features
