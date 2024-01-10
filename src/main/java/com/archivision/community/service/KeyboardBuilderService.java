@@ -1,6 +1,5 @@
 package com.archivision.community.service;
 
-import com.archivision.community.model.Reply;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -15,7 +14,7 @@ import static com.archivision.community.model.Reply.*;
 @Component
 public class KeyboardBuilderService {
 
-    public ReplyKeyboardMarkup generateSkipButton() {
+    public ReplyKeyboardMarkup skipButton() {
         return ReplyKeyboardMarkup.builder()
                 .keyboardRow(new KeyboardRow(Collections.singleton(KeyboardButton.builder()
                         .text(SKIP.toString())
@@ -24,15 +23,15 @@ public class KeyboardBuilderService {
                 .build();
     }
 
-    public ReplyKeyboardMarkup generateGenderButtons() {
-        return generateMultiButtons(true, MAN.toString(), GIRL.toString(), OTHER.toString());
+    public ReplyKeyboardMarkup genderButtons() {
+        return multiButtons(true, MAN.toString(), GIRL.toString(), OTHER.toString());
     }
 
-    public ReplyKeyboardMarkup generateLookingGenderButtons() {
-        return generateMultiButtons(true, "Хлопців", "Дівчат", "Все одно");
+    public ReplyKeyboardMarkup lookingGenderButtons() {
+        return multiButtons(true, "Хлопців", "Дівчат", "Все одно");
     }
 
-    public ReplyKeyboardMarkup buildButtonWithText(String text) {
+    public ReplyKeyboardMarkup button(String text) {
         return ReplyKeyboardMarkup.builder()
                 .keyboardRow(new KeyboardRow(){{
                     add(text);
@@ -41,8 +40,8 @@ public class KeyboardBuilderService {
                 .build();
     }
 
-    public ReplyKeyboardMarkup generateApprovalButtons() {
-        return generateMultiButtons(true, YES.toString(), CHANGE.toString());
+    public ReplyKeyboardMarkup approvalButtons() {
+        return multiButtons(true, YES.toString(), CHANGE.toString());
     }
 
     private KeyboardButton buttonWith(String text) {
@@ -51,7 +50,7 @@ public class KeyboardBuilderService {
                 .build();
     }
 
-    public ReplyKeyboardMarkup generateMultiButtons(boolean oneTime, String ... buttonTexts) {
+    public ReplyKeyboardMarkup multiButtons(boolean oneTime, String ... buttonTexts) {
         List<KeyboardButton> buttonList = Arrays.stream(buttonTexts)
                 .map(this::buttonWith)
                 .toList();
@@ -62,7 +61,7 @@ public class KeyboardBuilderService {
                 .build();
     }
 
-    public ReplyKeyboardMarkup generateMatchButtons() {
-        return generateMultiButtons(false, "+", "-");
+    public ReplyKeyboardMarkup matchButtons() {
+        return multiButtons(false, "+", "-");
     }
 }

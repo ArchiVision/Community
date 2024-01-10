@@ -17,7 +17,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Set;
 
-import static com.archivision.community.bot.State.APPROVE;
 import static com.archivision.community.bot.State.DESCRIPTION;
 
 @Component
@@ -36,7 +35,7 @@ public class TopicsInputStateHandler extends AbstractStateHandler implements Opt
         String messageText = message.getText();
         user.getTopics().add(new TopicDto().setName(messageText));
         log.info("topic={}", messageText);
-        messageSender.sendMsgWithMarkup(chatId, "Ще одну тему?", keyboardBuilder.buildButtonWithText("Завершити"));
+        messageSender.sendMsgWithMarkup(chatId, "Ще одну тему?", keyboardBuilder.button("Завершити"));
     }
 
     @Override
@@ -79,7 +78,7 @@ public class TopicsInputStateHandler extends AbstractStateHandler implements Opt
 
     @Override
     public NextStateData getNextState() {
-        return new NextStateData(DESCRIPTION, ResponseTemplate.DESC_INPUT, keyboardBuilder.generateSkipButton());
+        return new NextStateData(DESCRIPTION, ResponseTemplate.DESC_INPUT, keyboardBuilder.skipButton());
     }
 
     @Override

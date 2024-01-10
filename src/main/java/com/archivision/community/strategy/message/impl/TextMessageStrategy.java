@@ -36,14 +36,15 @@ public class TextMessageStrategy implements MessageStrategy {
         if (optionalDbUser.isPresent()) {
             User dbUser = optionalDbUser.get();
             stateManagerService.manageOtherStates(dbUser.getState(), message);
+            return;
+        }
+
+        Optional<UserDto> optionalUserDto = registrationProcessCache.get(chatId);
+        if (optionalUserDto.isEmpty()) {
+            registerIfNeeded(chatId, message);
         } else {
-            Optional<UserDto> optionalUserDto = registrationProcessCache.get(chatId);
-            if (optionalUserDto.isEmpty()) {
-                registerIfNeeded(chatId, message);
-            } else {
-                UserDto userDto = optionalUserDto.get();
-                stateManagerService.manageOtherStates(userDto.getState(), message);
-            }
+            UserDto userDto = optionalUserDto.get();
+            stateManagerService.manageOtherStates(userDto.getState(), message);
         }
     }
 

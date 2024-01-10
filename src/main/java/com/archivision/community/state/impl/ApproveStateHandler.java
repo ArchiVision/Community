@@ -46,6 +46,7 @@ public class ApproveStateHandler extends AbstractStateHandler {
             UserDto userDto = registrationProcessCache.remove(chatId);
             userService.saveUser(userDto);
             profileSender.showProfile(chatId);
+            messageSender.sendMsgWithMarkup(chatId, "Пошук", keyboardBuilder.matchButtons());
             profileSender.sendNextProfile(chatId);
         } else if (messageText.equals("Змінити")){
             changeStateToName(chatId);
@@ -61,7 +62,6 @@ public class ApproveStateHandler extends AbstractStateHandler {
 
     private void changeStateToMatch(Long chatId) {
         registrationProcessCache.getCurrentUser(chatId).setState(State.MATCH);
-        messageSender.sendMsgWithMarkup(chatId, "Пошук", keyboardBuilder.generateMatchButtons());
     }
 
     @Override

@@ -31,7 +31,7 @@ public class DescriptionStateHandler extends AbstractStateHandler implements Opt
             String messageText = message.getText();
             user.setState(PHOTO);
             user.setDescription(messageText);
-            messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.PHOTO, keyboardBuilder.generateSkipButton());
+            messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.PHOTO, keyboardBuilder.skipButton());
         });
     }
 
@@ -74,7 +74,7 @@ public class DescriptionStateHandler extends AbstractStateHandler implements Opt
 
     @Override
     public NextStateData getNextState() {
-        return new NextStateData(PHOTO, ResponseTemplate.PHOTO, keyboardBuilder.generateSkipButton());
+        return new NextStateData(PHOTO, ResponseTemplate.PHOTO, keyboardBuilder.skipButton());
     }
 
     @Override

@@ -31,7 +31,7 @@ public class AgeInputStateHandler extends AbstractStateHandler {
         user.setAge(Long.valueOf(message.getText()));
         user.setState(GENDER);
         messageSender.sendMsgWithMarkup(message.getChatId(), ResponseTemplate.GENDER_INPUT,
-                keyboardBuilder.generateGenderButtons());
+                keyboardBuilder.genderButtons());
     }
 
     @Override

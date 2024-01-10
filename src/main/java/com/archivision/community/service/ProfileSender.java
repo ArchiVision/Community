@@ -4,6 +4,7 @@ import com.archivision.community.cache.ActiveViewingData;
 import com.archivision.community.entity.Topic;
 import com.archivision.community.entity.User;
 import com.archivision.community.matcher.MatchedUsersListResolver;
+import com.archivision.community.matcher.model.UserWithMatchedProbability;
 import com.archivision.community.messagesender.MessageSender;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

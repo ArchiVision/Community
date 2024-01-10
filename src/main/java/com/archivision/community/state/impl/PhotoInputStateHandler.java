@@ -4,7 +4,6 @@ import com.archivision.community.bot.State;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.UserDto;
-import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.TelegramImageS3Service;
@@ -18,7 +17,6 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
 import java.util.List;
 
-import static com.archivision.community.bot.State.AGE;
 import static com.archivision.community.bot.State.APPROVE;
 
 @Component
@@ -78,7 +76,7 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
 
     private void goToApprovalState(Long chatId) {
         registrationProcessCache.getCurrentUser(chatId).setState(APPROVE);
-        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.APPROVE_INPUT, keyboardBuilder.generateApprovalButtons());
+        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.APPROVE_INPUT, keyboardBuilder.approvalButtons());
     }
 
     private String getFileId(Message message) {

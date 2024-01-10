@@ -70,6 +70,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public User saveUser(UserDto userDto) {
         return userRepository.save(userMapper.toEntity(userDto));
     }

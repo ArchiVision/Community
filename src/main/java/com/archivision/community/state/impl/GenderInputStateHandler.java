@@ -34,7 +34,7 @@ public class GenderInputStateHandler extends AbstractStateHandler  {
         user.setState(State.LOOKING);
         user.setGender(Gender.fromString(messageText));
         messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.LOOKING_FOR_INPUT,
-                keyboardBuilder.generateLookingGenderButtons());
+                keyboardBuilder.lookingGenderButtons());
     }
 
     @Override

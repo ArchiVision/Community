@@ -4,7 +4,6 @@ import com.archivision.community.bot.State;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.UserDto;
-import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
@@ -34,7 +33,7 @@ public class CityInputStateHandler extends AbstractStateHandler {
         user.setState(TOPIC);
         user.setCity(messageText);
         messageSender.sendMsgWithMarkup(message.getChatId(), ResponseTemplate.TOPICS_INPUT,
-                keyboardBuilder.generateSkipButton());
+                keyboardBuilder.skipButton());
     }
 
     @Override
