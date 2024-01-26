@@ -1,15 +1,17 @@
 telegram:
   bot:
-    username: commulinkbot
-    token: 6347574819:AAEXBwTe5LRqXqmu0K3ZLQiioZcDyNMWyK4
+    username: .
+    token: .
 
 community:
   likes-queue: like-events
+  payment-queue: payment-events
 
 spring:
   app:
     rabbit:
       like-event-queue-name: like-events
+      payment-event-queue-name: payment-events
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -33,12 +35,18 @@ spring:
 
 amazon:
   s3:
-    access-key: AKIASLAHI4MVD2Z4ZSOT
-    secret-key: 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
-    bucket-name: commulinkdata
+    access-key: .
+    secret-key: .
+    bucket-name: .
 
 logging:
   level:
     root: info
 server:
-  port: 8078
+  port: 8080
+
+paypal:
+  client:
+    id: .
+    secret: .
+    mode: sandbox

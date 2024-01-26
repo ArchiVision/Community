@@ -24,4 +24,8 @@ public class NotificationService {
         messageSender.sendTextMessage(likerId, "У вас симпатія! @"+likedUser.getUsername());
         profileSender.showUserProfileTo(likedId, likerId);
     }
+
+    public void notifyUserAboutSuccessfulPayment(String chatId, String message) {
+        messageSender.sendTextMessage(Long.valueOf(chatId), message);
+    }
 }

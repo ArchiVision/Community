@@ -1,4 +1,4 @@
-package com.archivision.community.state.impl;
+package com.archivision.community.state.impl.initial;
 
 import com.archivision.community.bot.State;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;

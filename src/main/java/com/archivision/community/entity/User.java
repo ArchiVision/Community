@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static jakarta.persistence.CascadeType.MERGE;
 import static jakarta.persistence.CascadeType.PERSIST;
-import static jakarta.persistence.FetchType.*;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "users")
@@ -36,9 +36,10 @@ public class User {
     private Gender lookingFor = Gender.ANYONE;
     private String description;
     private String photoId;
-
     @Enumerated(EnumType.STRING)
     private State state = State.START;
+    @Enumerated(EnumType.STRING)
+    private Subscription subscription = Subscription.NONE;
 
     @ManyToMany(cascade = {PERSIST, MERGE}, fetch = LAZY)
     @JoinTable(
@@ -48,4 +49,10 @@ public class User {
     )
     @ToString.Exclude
     private Set<Topic> topics = new HashSet<>();
+
+    public enum Subscription {
+        VIP,
+        PREMIUM,
+        NONE
+    }
 }

@@ -1,6 +1,13 @@
 package com.archivision.community.service;
 
-import com.paypal.api.payments.*;
+import com.archivision.community.dto.PaymentRequestDto;
+import com.paypal.api.payments.Amount;
+import com.paypal.api.payments.Links;
+import com.paypal.api.payments.Payer;
+import com.paypal.api.payments.Payment;
+import com.paypal.api.payments.PaymentExecution;
+import com.paypal.api.payments.RedirectUrls;
+import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +67,17 @@ public class PayPalService {
         paymentExecution.setPayerId(payerId);
 
         return payment.execute(apiContext, paymentExecution);
+    }
+
+    public Payment createPaymentUrl(PaymentRequestDto paymentRequest) throws PayPalRESTException {
+        return createPayment(
+                paymentRequest.getTotal(),
+                paymentRequest.getCurrency(),
+                "paypal",
+                "sale",
+                "Payment description",
+                "http://localhost:8080/paypal/cancel",
+                "http://localhost:8080/paypal/success");
     }
 }
 

@@ -1,18 +1,30 @@
 package com.archivision.community.service;
 
+import com.archivision.community.model.Subscription;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.archivision.community.model.Reply.*;
+import static com.archivision.community.model.Reply.CHANGE;
+import static com.archivision.community.model.Reply.GIRL;
+import static com.archivision.community.model.Reply.MAN;
+import static com.archivision.community.model.Reply.OTHER;
+import static com.archivision.community.model.Reply.SKIP;
+import static com.archivision.community.model.Reply.YES;
 
 @Component
+@RequiredArgsConstructor
 public class KeyboardBuilderService {
+    private final SubscriptionService subscriptionService;
 
     public ReplyKeyboardMarkup skipButton() {
         return ReplyKeyboardMarkup.builder()
@@ -62,6 +74,16 @@ public class KeyboardBuilderService {
     }
 
     public ReplyKeyboardMarkup matchButtons() {
-        return multiButtons(false, "+", "-");
+        return multiButtons(false, "+", "-", "settings");
+    }
+
+    public ReplyKeyboardMarkup subscriptions() {
+        List<String> strings = subscriptionService.getAvailableSubscriptionTypes().stream().map(Subscription::getName).toList();
+        return multiButtons(false, strings.toArray(new String[0]));
+    }
+
+    public InlineKeyboardMarkup inlineBtn(String subscription, String paymentUrl) {
+        InlineKeyboardButton build = InlineKeyboardButton.builder().text(subscription).url(paymentUrl).build();
+        return new InlineKeyboardMarkup(List.of(List.of(build)));
     }
 }

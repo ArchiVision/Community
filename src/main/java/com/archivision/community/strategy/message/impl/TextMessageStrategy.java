@@ -8,7 +8,9 @@ import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.User;
 import com.archivision.community.mapper.UserMapper;
 import com.archivision.community.messagesender.MessageSender;
+import com.archivision.community.model.FilterResult;
 import com.archivision.community.service.StateManagerService;
+import com.archivision.community.service.ServiceCommandChecker;
 import com.archivision.community.service.UserService;
 import com.archivision.community.strategy.message.MessageStrategy;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +29,16 @@ public class TextMessageStrategy implements MessageStrategy {
     private final StateManagerService stateManagerService;
     private final ActiveRegistrationProcessCache registrationProcessCache;
     private final UserMapper userMapper;
+    private final ServiceCommandChecker filterService;
 
     @Override
     public void handleMessage(Message message) {
         log.info("public void handleMessage(Message message) , TextMessageStrategy");
+        FilterResult filterResult = filterService.filter(message);
+        if (!filterResult.isProcessNext()) {
+            return;
+        }
+
         Long chatId = message.getChatId();
         Optional<User> optionalDbUser = userService.getUserByTelegramId(chatId);
         if (optionalDbUser.isPresent()) {

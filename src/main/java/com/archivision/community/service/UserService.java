@@ -74,5 +74,13 @@ public class UserService {
     public User saveUser(UserDto userDto) {
         return userRepository.save(userMapper.toEntity(userDto));
     }
+
+    @Transactional
+    public void changeSubscription(String chatId, User.Subscription subscription) {
+        Optional<User> byId = userRepository.findByTelegramUserId(Long.valueOf(chatId));
+        byId.ifPresentOrElse(user -> {
+            user.setSubscription(subscription);
+        }, () -> log.info("User with id={} not found", chatId));
+    }
 }
 

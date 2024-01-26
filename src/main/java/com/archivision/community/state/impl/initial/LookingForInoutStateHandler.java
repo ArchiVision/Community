@@ -1,9 +1,10 @@
-package com.archivision.community.state.impl;
+package com.archivision.community.state.impl.initial;
 
 import com.archivision.community.bot.State;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.UserDto;
+import com.archivision.community.entity.Gender;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserService;
@@ -13,43 +14,41 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import static com.archivision.community.bot.State.TOPIC;
+import java.util.Set;
 
 @Component
 @Slf4j
-public class CityInputStateHandler extends AbstractStateHandler {
-    public CityInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                                 KeyboardBuilderService keyboardBuilderService, ActiveRegistrationProcessCache registrationProcessCache) {
-        super(inputValidator, userService, messageSender, keyboardBuilderService, registrationProcessCache);
+public class LookingForInoutStateHandler extends AbstractStateHandler  {
+    public LookingForInoutStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
+                                       KeyboardBuilderService keyboardBuilder, ActiveRegistrationProcessCache registrationProcessCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
     }
 
-    private static final String ERROR_CITY = "Такого міста не існує або ми ще його не додали. Сорі :(";
+    private static final Set<String> options = Set.of("Хлопців", "Дівчат", "Все одно");
 
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
         UserDto user = registrationProcessCache.getCurrentUser(chatId);
         String messageText = message.getText();
-        user.setState(TOPIC);
-        user.setCity(messageText);
-        messageSender.sendMsgWithMarkup(message.getChatId(), ResponseTemplate.TOPICS_INPUT,
-                keyboardBuilder.skipButton());
+        user.setState(State.CITY);
+        user.setLookingFor(Gender.fromString(messageText));
+        messageSender.sendTextMessage(chatId, ResponseTemplate.CITY_INPUT);
     }
 
     @Override
     public void onValidationError(Message message) {
-        log.error("Місто={} не знайдено", message.getText());
-        messageSender.sendTextMessage(message.getChatId(), ERROR_CITY);
+        log.error("Smth go wrong={}", message.getText());
     }
 
     @Override
     public boolean isInputValid(Message message) {
-        return inputValidator.isCityValid(message.getText());
+        return options.contains(message.getText());
     }
 
     @Override
     public State getState() {
-        return State.CITY;
+        return State.LOOKING;
     }
 
     @Override

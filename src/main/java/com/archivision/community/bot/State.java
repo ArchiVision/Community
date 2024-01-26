@@ -14,7 +14,8 @@ public enum State {
     DESCRIPTION("description"),
     APPROVE("approve"),
     MATCH("match"),
-    PHOTO("photo");
+    PHOTO("photo"),
+    SETTINGS("settings");
 
     private final String value;
     State(String value) {
