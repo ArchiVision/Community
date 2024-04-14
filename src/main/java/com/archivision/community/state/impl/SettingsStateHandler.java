@@ -1,11 +1,11 @@
 package com.archivision.community.state.impl;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.SubscriptionService;
-import com.archivision.community.service.UserService;
+import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.state.Validatable;
 import com.archivision.community.util.InputValidator;
@@ -43,8 +43,8 @@ public class SettingsStateHandler extends AbstractStateHandler implements Valida
     }
 
     @Override
-    public State getState() {
-        return State.SETTINGS;
+    public UserFlowState getState() {
+        return UserFlowState.SETTINGS;
     }
 
     @Override

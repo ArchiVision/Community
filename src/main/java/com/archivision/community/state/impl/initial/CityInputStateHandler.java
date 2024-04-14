@@ -1,19 +1,19 @@
 package com.archivision.community.state.impl.initial;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
-import com.archivision.community.service.UserService;
+import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import static com.archivision.community.bot.State.TOPIC;
+import static com.archivision.community.bot.UserFlowState.TOPIC;
 
 @Component
 @Slf4j
@@ -30,7 +30,7 @@ public class CityInputStateHandler extends AbstractStateHandler {
         Long chatId = message.getChatId();
         UserDto user = registrationProcessCache.getCurrentUser(chatId);
         String messageText = message.getText();
-        user.setState(TOPIC);
+        user.setUserFlowState(TOPIC);
         user.setCity(messageText);
         messageSender.sendMsgWithMarkup(message.getChatId(), ResponseTemplate.TOPICS_INPUT,
                 keyboardBuilder.skipButton());
@@ -48,8 +48,8 @@ public class CityInputStateHandler extends AbstractStateHandler {
     }
 
     @Override
-    public State getState() {
-        return State.CITY;
+    public UserFlowState getState() {
+        return UserFlowState.CITY;
     }
 
     @Override

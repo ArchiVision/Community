@@ -1,7 +1,8 @@
-package com.archivision.community.service;
+package com.archivision.community.service.user;
 
 import com.archivision.community.cache.ActiveViewingData;
 import com.archivision.community.matcher.MatchedUsersListResolver;
+import com.archivision.community.service.ProfileSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

@@ -7,7 +7,6 @@ import com.archivision.community.repo.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -28,7 +27,7 @@ public class UserMapper {
         userDto.setCity(user.getCity());
         userDto.setDescription(user.getDescription());
         userDto.setAge(user.getAge());
-        userDto.setState(user.getState());
+        userDto.setUserFlowState(user.getUserFlowState());
         userDto.setUsername(user.getUsername());
         userDto.setGender(user.getGender());
         userDto.setLookingFor(user.getLookingFor());
@@ -45,7 +44,7 @@ public class UserMapper {
         user.setCity(userDto.getCity());
         user.setDescription(userDto.getDescription());
         user.setAge(userDto.getAge());
-        user.setState(userDto.getState());
+        user.setUserFlowState(userDto.getUserFlowState());
         user.setUsername(userDto.getUsername());
         user.setGender(userDto.getGender());
         user.setLookingFor(userDto.getLookingFor());

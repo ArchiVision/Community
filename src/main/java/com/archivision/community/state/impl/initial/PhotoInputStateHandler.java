@@ -1,13 +1,13 @@
 package com.archivision.community.state.impl.initial;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.TelegramImageS3Service;
-import com.archivision.community.service.UserService;
+import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
 import java.util.List;
 
-import static com.archivision.community.bot.State.APPROVE;
+import static com.archivision.community.bot.UserFlowState.APPROVE;
 
 @Component
 @Slf4j
@@ -57,8 +57,8 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
     }
 
     @Override
-    public State getState() {
-        return State.PHOTO;
+    public UserFlowState getState() {
+        return UserFlowState.PHOTO;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
     }
 
     private void goToApprovalState(Long chatId) {
-        registrationProcessCache.getCurrentUser(chatId).setState(APPROVE);
+        registrationProcessCache.getCurrentUser(chatId).setUserFlowState(APPROVE);
         messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.APPROVE_INPUT, keyboardBuilder.approvalButtons());
     }
 

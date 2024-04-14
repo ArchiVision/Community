@@ -1,10 +1,12 @@
 package com.archivision.community.state.impl;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.model.Reply;
 import com.archivision.community.service.*;
+import com.archivision.community.service.user.UserInteractionService;
+import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.state.WithReplyOptions;
 import com.archivision.community.util.InputValidator;
@@ -41,7 +43,7 @@ public class MatchStateHandler extends AbstractStateHandler implements WithReply
         }
         if (messageText.equals(Reply.SETTINGS.toString())) {
             messageSender.sendMsgWithMarkup(chatId, "Налаштування", keyboardBuilder.subscriptions());
-            userService.changeState(chatId, State.SETTINGS);
+            userService.changeState(chatId, UserFlowState.SETTINGS);
         }
     }
 
@@ -56,8 +58,8 @@ public class MatchStateHandler extends AbstractStateHandler implements WithReply
     }
 
     @Override
-    public State getState() {
-        return State.MATCH;
+    public UserFlowState getState() {
+        return UserFlowState.MATCH;
     }
 
     @Override

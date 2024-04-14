@@ -3,9 +3,8 @@ package com.archivision.community.service;
 import com.archivision.community.cache.ActiveViewingData;
 import com.archivision.community.entity.Topic;
 import com.archivision.community.entity.User;
-import com.archivision.community.matcher.MatchedUsersListResolver;
-import com.archivision.community.matcher.model.UserWithMatchedProbability;
 import com.archivision.community.messagesender.MessageSender;
+import com.archivision.community.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,6 @@ public class ProfileSender {
     private final UserService userService;
     private final TelegramImageS3Service telegramImageS3Service;
     private final MessageSender messageSender;
-    private final MatchedUsersListResolver matchedUsersListResolver;
     private final ActiveViewingData activeViewingData;
 
     public void showUserProfileTo(Long chatId, Long userTo) {
@@ -33,7 +31,7 @@ public class ProfileSender {
         if (Objects.equals(chatId, userTo)) {
             messageSender.sendTextMessage(userTo, "Твоя анкета:");
         }
-        boolean hasPhoto = !(user.getPhotoId() == null);
+        boolean hasPhoto = user.getPhotoId() != null;
         telegramImageS3Service.sendImageOfUserToUser(chatId, userTo, hasPhoto, formattedProfileText);
         log.info("showing profile");
     }
@@ -48,11 +46,7 @@ public class ProfileSender {
 
     @SneakyThrows
     private Optional<User> giveUserPersonList(Long chatId) {
-        User user = userService.getUserByTgIdWithTopics(chatId);
         List<User> allUsers = userService.findAllExceptId(chatId);
-//        List<User> orderedMatchingList = matchedUsersListResolver.getOrderedMatchingList(user, allUsers).stream()
-//                .map(UserWithMatchedProbability::user)
-//                .toList();
         return allUsers.size() > 0 ? Optional.of(allUsers.get(0)) : Optional.empty();
     }
 

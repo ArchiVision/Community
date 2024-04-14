@@ -1,13 +1,13 @@
 package com.archivision.community.state.impl.initial;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.TopicDto;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
-import com.archivision.community.service.UserService;
+import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.state.OptionalState;
 import com.archivision.community.util.InputValidator;
@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Set;
 
-import static com.archivision.community.bot.State.DESCRIPTION;
+import static com.archivision.community.bot.UserFlowState.DESCRIPTION;
 
 @Component
 @Slf4j
@@ -65,14 +65,14 @@ public class TopicsInputStateHandler extends AbstractStateHandler implements Opt
     }
 
     @Override
-    public State getState() {
-        return State.TOPIC;
+    public UserFlowState getState() {
+        return UserFlowState.TOPIC;
     }
 
     @Override
     public void changeToNextState(Long chatId) {
         NextStateData nextState = getNextState();
-        registrationProcessCache.getCurrentUser(chatId).setState(nextState.state());
+        registrationProcessCache.getCurrentUser(chatId).setUserFlowState(nextState.userFlowState());
         messageSender.sendNextStateData(chatId, nextState);
     }
 

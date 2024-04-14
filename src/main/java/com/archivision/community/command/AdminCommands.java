@@ -3,7 +3,6 @@ package com.archivision.community.command;
 import java.util.Arrays;
 
 public enum AdminCommands {
-
     DROP_USER("/drop_user"),
     SHUTDOWN_BOT("/sb");
 

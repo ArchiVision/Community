@@ -1,6 +1,6 @@
 package com.archivision.community.strategy.message.impl;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.command.UserCommands;
@@ -11,7 +11,7 @@ import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.model.FilterResult;
 import com.archivision.community.service.StateManagerService;
 import com.archivision.community.service.ServiceCommandChecker;
-import com.archivision.community.service.UserService;
+import com.archivision.community.service.user.UserService;
 import com.archivision.community.strategy.message.MessageStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,6 @@ public class TextMessageStrategy implements MessageStrategy {
     private final MessageSender messageSender;
     private final StateManagerService stateManagerService;
     private final ActiveRegistrationProcessCache registrationProcessCache;
-    private final UserMapper userMapper;
     private final ServiceCommandChecker filterService;
 
     @Override
@@ -43,7 +42,7 @@ public class TextMessageStrategy implements MessageStrategy {
         Optional<User> optionalDbUser = userService.getUserByTelegramId(chatId);
         if (optionalDbUser.isPresent()) {
             User dbUser = optionalDbUser.get();
-            stateManagerService.manageOtherStates(dbUser.getState(), message);
+            stateManagerService.manageOtherStates(dbUser.getUserFlowState(), message);
             return;
         }
 
@@ -52,7 +51,7 @@ public class TextMessageStrategy implements MessageStrategy {
             registerIfNeeded(chatId, message);
         } else {
             UserDto userDto = optionalUserDto.get();
-            stateManagerService.manageOtherStates(userDto.getState(), message);
+            stateManagerService.manageOtherStates(userDto.getUserFlowState(), message);
         }
     }
 
@@ -67,7 +66,7 @@ public class TextMessageStrategy implements MessageStrategy {
 
     private void saveUser(Long chatId, String username) {
         UserDto userDto = new UserDto();
-        userDto.setState(State.NAME);
+        userDto.setUserFlowState(UserFlowState.NAME);
         userDto.setTelegramUserId(chatId);
         userDto.setUsername(username);
         registrationProcessCache.put(userDto);

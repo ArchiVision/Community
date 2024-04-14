@@ -43,8 +43,7 @@ public class SubscriptionService {
     public String getPaymentUrl(Long chatId, String subscriptionType) {
         // rabbit & redis
         Subscription foundSubscription = getAvailableSubscriptionTypes().stream().filter(subscription -> subscription.getName().equals(subscriptionType)).findAny().orElseThrow();
-        int price = foundSubscription.getPrice();
-        PaymentRequestDto requestDto = PaymentRequestDto.builder().total(price).currency("EUR").build();
+        PaymentRequestDto requestDto = PaymentRequestDto.builder().total(foundSubscription.getPrice()).currency("EUR").build();
         Payment payment = payPalService.createPaymentUrl(requestDto);
         String paymentId = payment.getId();
         redisTemplate.opsForValue().set(paymentId, String.valueOf(chatId));

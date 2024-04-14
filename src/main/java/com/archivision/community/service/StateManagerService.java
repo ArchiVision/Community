@@ -1,6 +1,6 @@
 package com.archivision.community.service;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.state.StateHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +13,10 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class StateManagerService {
-    private final Map<State, StateHandler> statesHandlers;
+    private final Map<UserFlowState, StateHandler> statesHandlers;
 
-    public void manageOtherStates(State state, Message message) {
-        StateHandler stateHandler = statesHandlers.get(state);
+    public void manageOtherStates(UserFlowState userFlowState, Message message) {
+        StateHandler stateHandler = statesHandlers.get(userFlowState);
         if (stateHandler != null) {
             stateHandler.handle(message);
         }

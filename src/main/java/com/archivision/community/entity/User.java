@@ -1,6 +1,6 @@
 package com.archivision.community.entity;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,7 +37,7 @@ public class User {
     private String description;
     private String photoId;
     @Enumerated(EnumType.STRING)
-    private State state = State.START;
+    private UserFlowState userFlowState = UserFlowState.START;
     @Enumerated(EnumType.STRING)
     private Subscription subscription = Subscription.NONE;
 

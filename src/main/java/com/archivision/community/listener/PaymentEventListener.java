@@ -3,7 +3,7 @@ package com.archivision.community.listener;
 import com.archivision.community.entity.User;
 import com.archivision.community.event.PaymentEvent;
 import com.archivision.community.service.NotificationService;
-import com.archivision.community.service.UserService;
+import com.archivision.community.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

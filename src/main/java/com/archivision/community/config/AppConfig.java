@@ -1,9 +1,10 @@
 package com.archivision.community.config;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.state.StateHandler;
 import com.archivision.community.strategy.message.MessageStrategy;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,7 +18,7 @@ public class AppConfig {
     private final List<StateHandler> stateHandlers;
 
     @Bean
-    public Map<String, MessageStrategy> messageStrategyMap(List<MessageStrategy> strategies) {
+    public Map<String, MessageStrategy> userMessageStrategyMap(List<MessageStrategy> strategies) {
         Map<String, MessageStrategy> strategyMap = new HashMap<>();
         for (MessageStrategy strategy : strategies) {
             strategyMap.put(strategy.getClass().getSimpleName(), strategy);
@@ -26,8 +27,8 @@ public class AppConfig {
     }
 
     @Bean
-    public Map<State, StateHandler> stateStateHandlerMap() {
-        Map<State, StateHandler> map = new HashMap<>();
+    public Map<UserFlowState, StateHandler> userFlowStateStrategyMap() {
+        Map<UserFlowState, StateHandler> map = new HashMap<>();
         for (StateHandler stateHandler : stateHandlers) {
             map.put(stateHandler.getState(), stateHandler);
         }

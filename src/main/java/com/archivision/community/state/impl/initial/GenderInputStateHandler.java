@@ -1,13 +1,13 @@
 package com.archivision.community.state.impl.initial;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.Gender;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
-import com.archivision.community.service.UserService;
+import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class GenderInputStateHandler extends AbstractStateHandler  {
         Long chatId = message.getChatId();
         UserDto user = registrationProcessCache.getCurrentUser(chatId);
         String messageText = message.getText();
-        user.setState(State.LOOKING);
+        user.setUserFlowState(UserFlowState.LOOKING);
         user.setGender(Gender.fromString(messageText));
         messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.LOOKING_FOR_INPUT,
                 keyboardBuilder.lookingGenderButtons());
@@ -48,8 +48,8 @@ public class GenderInputStateHandler extends AbstractStateHandler  {
     }
 
     @Override
-    public State getState() {
-        return State.GENDER;
+    public UserFlowState getState() {
+        return UserFlowState.GENDER;
     }
 
     @Override
