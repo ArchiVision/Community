@@ -1,4 +1,4 @@
-package com.archivision.community.service;
+package com.archivision.community.service.user;
 
 import com.archivision.community.entity.Topic;
 import com.archivision.community.entity.User;

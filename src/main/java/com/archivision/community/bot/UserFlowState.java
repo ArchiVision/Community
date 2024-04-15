@@ -3,7 +3,7 @@ package com.archivision.community.bot;
 import lombok.Getter;
 
 @Getter
-public enum State {
+public enum UserFlowState {
     START("start"),
     NAME("name"),
     CITY("city"),
@@ -14,10 +14,11 @@ public enum State {
     DESCRIPTION("description"),
     APPROVE("approve"),
     MATCH("match"),
-    PHOTO("photo");
+    PHOTO("photo"),
+    SETTINGS("settings");
 
     private final String value;
-    State(String value) {
+    UserFlowState(String value) {
         this.value = value;
     }
 }

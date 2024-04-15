@@ -6,7 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.1.1</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>com.archivision</groupId>
 	<artifactId>community</artifactId>
@@ -87,6 +87,11 @@
 			<artifactId>quartz</artifactId>
 			<version>2.3.2</version>
 		</dependency>
+		<dependency>
+			<groupId>com.paypal.sdk</groupId>
+			<artifactId>rest-api-sdk</artifactId>
+			<version>1.14.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -105,5 +110,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

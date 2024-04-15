@@ -3,7 +3,7 @@ package com.archivision.community.state;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
-import com.archivision.community.service.UserService;
+import com.archivision.community.service.user.UserService;
 import com.archivision.community.util.InputValidator;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.objects.Message;

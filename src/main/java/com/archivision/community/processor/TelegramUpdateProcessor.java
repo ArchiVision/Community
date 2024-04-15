@@ -1,8 +1,8 @@
 package com.archivision.community.processor;
 
-import com.archivision.community.handler.CallbackHandler;
-import com.archivision.community.handler.MessageHandler;
-import com.archivision.community.service.UserService;
+import com.archivision.community.handler.CallbackTelegramEventHandler;
+import com.archivision.community.handler.MessageTelegramEventHandler;
+import com.archivision.community.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,8 +13,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @RequiredArgsConstructor
 @Slf4j
 public class TelegramUpdateProcessor implements UpdateProcessor {
-    private final CallbackHandler callbackHandler;
-    private final MessageHandler messageHandlers;
+    private final CallbackTelegramEventHandler callbackHandler;
+    private final MessageTelegramEventHandler messageHandlers;
     private final UserService userService;
 
     public void processUpdate(Update update) {

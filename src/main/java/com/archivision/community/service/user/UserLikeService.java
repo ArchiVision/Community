@@ -1,4 +1,4 @@
-package com.archivision.community.service;
+package com.archivision.community.service.user;
 
 import com.archivision.community.entity.UserLike;
 import com.archivision.community.event.LikeEvent;
@@ -29,7 +29,6 @@ public class UserLikeService {
     }
 
     public boolean isReverseLikeExists(Long likerId, Long likedId) {
-        long count = userLikeRepo.countByUserIdAndLikedUserId(likedId, likerId);
-        return count > 0;
+        return userLikeRepo.countByUserIdAndLikedUserId(likedId, likerId) > 0;
     }
 }

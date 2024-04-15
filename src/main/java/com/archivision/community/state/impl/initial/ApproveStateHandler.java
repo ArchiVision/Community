@@ -1,6 +1,6 @@
-package com.archivision.community.state.impl;
+package com.archivision.community.state.impl.initial;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.cache.ActiveViewingData;
 import com.archivision.community.command.ResponseTemplate;
@@ -9,7 +9,7 @@ import com.archivision.community.matcher.MatchedUsersListResolver;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.ProfileSender;
-import com.archivision.community.service.UserService;
+import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +46,7 @@ public class ApproveStateHandler extends AbstractStateHandler {
             UserDto userDto = registrationProcessCache.remove(chatId);
             userService.saveUser(userDto);
             profileSender.showProfile(chatId);
+            messageSender.sendMsgWithMarkup(chatId, "Пошук", keyboardBuilder.matchButtons());
             profileSender.sendNextProfile(chatId);
         } else if (messageText.equals("Змінити")){
             changeStateToName(chatId);
@@ -55,18 +56,17 @@ public class ApproveStateHandler extends AbstractStateHandler {
     }
 
     private void changeStateToName(Long chatId) {
-        registrationProcessCache.getCurrentUser(chatId).setState(State.NAME);
+        registrationProcessCache.getCurrentUser(chatId).setUserFlowState(UserFlowState.NAME);
         messageSender.sendTextMessage(chatId, ResponseTemplate.NAME_INPUT);
     }
 
     private void changeStateToMatch(Long chatId) {
-        registrationProcessCache.getCurrentUser(chatId).setState(State.MATCH);
-        messageSender.sendMsgWithMarkup(chatId, "Пошук", keyboardBuilder.generateMatchButtons());
+        registrationProcessCache.getCurrentUser(chatId).setUserFlowState(UserFlowState.MATCH);
     }
 
     @Override
-    public State getState() {
-        return State.APPROVE;
+    public UserFlowState getState() {
+        return UserFlowState.APPROVE;
     }
 
     @Override

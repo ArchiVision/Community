@@ -11,11 +11,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @RequiredArgsConstructor
 @Primary
 public class BotStarter {
+    private final BotRegistrar botRegistrar;
     private final CommunityBot communityBot;
     private final UpdateProcessor updateProcessor;
 
     @PostConstruct
-    public void start() {
+    public void start() throws TelegramApiException {
         communityBot.setUpdateProcessor(updateProcessor);
+        botRegistrar.register(communityBot);
     }
 }

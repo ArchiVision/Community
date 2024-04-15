@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -54,6 +55,16 @@ public class TgMessageSender implements MessageSender {
     @Override
     public void sendNextStateData(Long chatId, OptionalState.NextStateData nextState) {
         sendMsgWithMarkup(chatId, nextState.responseText(), nextState.markup());
+    }
+
+    @Override
+    public void sendMsgWithInline(Long chatId, InlineKeyboardMarkup markup) {
+        SendMessage msg = SendMessage.builder()
+                .replyMarkup(markup)
+                .chatId(chatId)
+                .text("Посилання на оплату")
+                .build();
+        sendMessage(msg);
     }
 
     @Autowired

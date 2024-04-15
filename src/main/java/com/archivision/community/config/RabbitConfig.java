@@ -10,4 +10,9 @@ public class RabbitConfig {
     public Queue likesQueue() {
         return new Queue("like-events", true);
     }
+
+    @Bean
+    public Queue paymentQueue() {
+        return new Queue("payment-events", true);
+    }
 }

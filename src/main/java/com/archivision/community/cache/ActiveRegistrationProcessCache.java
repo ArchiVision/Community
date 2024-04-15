@@ -13,9 +13,8 @@ import java.util.Optional;
 @Component
 public class ActiveRegistrationProcessCache extends ConcurrentHashMapCacheService<Long, UserDto> {
     public void put(UserDto userDto) {
-        Long telegramId = Optional.ofNullable(userDto.getTelegramUserId()).orElseThrow(() ->
-                new MissingTelegramIdException("UserDto has no telegram id to be putted in cache"));
-        cache.put(telegramId, userDto);
+        cache.put(Optional.ofNullable(userDto.getTelegramUserId()).orElseThrow(() ->
+                new MissingTelegramIdException("UserDto has no telegram id to be putted in cache")), userDto);
     }
 
     public UserDto getCurrentUser(Long tgId) {

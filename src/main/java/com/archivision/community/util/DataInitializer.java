@@ -1,6 +1,6 @@
 package com.archivision.community.util;
 
-import com.archivision.community.service.UserService;
+import com.archivision.community.service.user.UserService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

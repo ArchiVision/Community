@@ -1,10 +1,9 @@
 package com.archivision.community.strategy.message.impl;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.service.StateManagerService;
-import com.archivision.community.service.UserService;
 import com.archivision.community.strategy.message.MessageStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +21,13 @@ public class PhotoMessageStrategy implements MessageStrategy {
         Long chatId = message.getChatId();
         registrationProcessCache.get(chatId).ifPresentOrElse(user -> {
             if (ifNotInPhotoState(user)) return;
-            stateManagerService.manageOtherStates(user.getState(), message);
+            stateManagerService.manageOtherStates(user.getUserFlowState(), message);
         }, () -> log.info("User with tg id={} is not registered in DB", chatId));
     }
 
     private static boolean ifNotInPhotoState(UserDto user) {
-        if (!user.getState().equals(State.PHOTO)) {
-            log.info("User={} in state={}. Do not process picture", user.getTelegramUserId(), user.getState());
+        if (!user.getUserFlowState().equals(UserFlowState.PHOTO)) {
+            log.info("User={} in state={}. Do not process picture", user.getTelegramUserId(), user.getUserFlowState());
             return true;
         }
         return false;

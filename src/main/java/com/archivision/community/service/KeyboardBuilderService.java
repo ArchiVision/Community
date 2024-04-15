@@ -1,21 +1,32 @@
 package com.archivision.community.service;
 
-import com.archivision.community.model.Reply;
+import com.archivision.community.model.Subscription;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.archivision.community.model.Reply.*;
+import static com.archivision.community.model.Reply.CHANGE;
+import static com.archivision.community.model.Reply.GIRL;
+import static com.archivision.community.model.Reply.MAN;
+import static com.archivision.community.model.Reply.OTHER;
+import static com.archivision.community.model.Reply.SKIP;
+import static com.archivision.community.model.Reply.YES;
 
 @Component
+@RequiredArgsConstructor
 public class KeyboardBuilderService {
+    private final SubscriptionService subscriptionService;
 
-    public ReplyKeyboardMarkup generateSkipButton() {
+    public ReplyKeyboardMarkup skipButton() {
         return ReplyKeyboardMarkup.builder()
                 .keyboardRow(new KeyboardRow(Collections.singleton(KeyboardButton.builder()
                         .text(SKIP.toString())
@@ -24,15 +35,15 @@ public class KeyboardBuilderService {
                 .build();
     }
 
-    public ReplyKeyboardMarkup generateGenderButtons() {
-        return generateMultiButtons(true, MAN.toString(), GIRL.toString(), OTHER.toString());
+    public ReplyKeyboardMarkup genderButtons() {
+        return multiButtons(true, MAN.toString(), GIRL.toString(), OTHER.toString());
     }
 
-    public ReplyKeyboardMarkup generateLookingGenderButtons() {
-        return generateMultiButtons(true, "Хлопців", "Дівчат", "Все одно");
+    public ReplyKeyboardMarkup lookingGenderButtons() {
+        return multiButtons(true, "Хлопців", "Дівчат", "Все одно");
     }
 
-    public ReplyKeyboardMarkup buildButtonWithText(String text) {
+    public ReplyKeyboardMarkup button(String text) {
         return ReplyKeyboardMarkup.builder()
                 .keyboardRow(new KeyboardRow(){{
                     add(text);
@@ -41,8 +52,8 @@ public class KeyboardBuilderService {
                 .build();
     }
 
-    public ReplyKeyboardMarkup generateApprovalButtons() {
-        return generateMultiButtons(true, YES.toString(), CHANGE.toString());
+    public ReplyKeyboardMarkup approvalButtons() {
+        return multiButtons(true, YES.toString(), CHANGE.toString());
     }
 
     private KeyboardButton buttonWith(String text) {
@@ -51,7 +62,7 @@ public class KeyboardBuilderService {
                 .build();
     }
 
-    public ReplyKeyboardMarkup generateMultiButtons(boolean oneTime, String ... buttonTexts) {
+    public ReplyKeyboardMarkup multiButtons(boolean oneTime, String ... buttonTexts) {
         List<KeyboardButton> buttonList = Arrays.stream(buttonTexts)
                 .map(this::buttonWith)
                 .toList();
@@ -62,7 +73,17 @@ public class KeyboardBuilderService {
                 .build();
     }
 
-    public ReplyKeyboardMarkup generateMatchButtons() {
-        return generateMultiButtons(false, "+", "-");
+    public ReplyKeyboardMarkup matchButtons() {
+        return multiButtons(false, "+", "-", "settings");
+    }
+
+    public ReplyKeyboardMarkup subscriptions() {
+        List<String> strings = subscriptionService.getAvailableSubscriptionTypes().stream().map(Subscription::getName).toList();
+        return multiButtons(false, strings.toArray(new String[0]));
+    }
+
+    public InlineKeyboardMarkup inlineBtn(String subscription, String paymentUrl) {
+        InlineKeyboardButton build = InlineKeyboardButton.builder().text(subscription).url(paymentUrl).build();
+        return new InlineKeyboardMarkup(List.of(List.of(build)));
     }
 }

@@ -1,6 +1,6 @@
-package com.archivision.community.service;
+package com.archivision.community.service.user;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.User;
 import com.archivision.community.mapper.UserMapper;
@@ -21,10 +21,10 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional
-    public void changeState(Long userId, State userState) {
+    public void changeState(Long userId, UserFlowState userUserFlowState) {
         Optional<User> byId = userRepository.findByTelegramUserId(userId);
         byId.ifPresentOrElse(user -> {
-            user.setState(userState);
+            user.setUserFlowState(userUserFlowState);
         }, () -> log.info("User with id={} not found", userId));
     }
 
@@ -70,8 +70,17 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public User saveUser(UserDto userDto) {
         return userRepository.save(userMapper.toEntity(userDto));
+    }
+
+    @Transactional
+    public void changeSubscription(String chatId, User.Subscription subscription) {
+        Optional<User> byId = userRepository.findByTelegramUserId(Long.valueOf(chatId));
+        byId.ifPresentOrElse(user -> {
+            user.setSubscription(subscription);
+        }, () -> log.info("User with id={} not found", chatId));
     }
 }
 

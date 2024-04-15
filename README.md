@@ -15,7 +15,7 @@ This bot is designed to connect people based on their interests and preferences.
 - **Real-time Notifications**: Notifies users when they have a match.
 - **Admin Commands**: Provides admin-level commands for better control.
 - **Caching**: Uses custom caching for improved performance.
-- **State Management**: Utilizes a state machine pattern for handling different user states.
+- **State Management**: Utilizes a userFlowState machine pattern for handling different user states.
 - **Payment System Integration**: Uses WayForPay payment engine to perform user transactions
 
 ## Quick Setup

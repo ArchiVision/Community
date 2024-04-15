@@ -1,5 +1,5 @@
 package com.archivision.community.handler;
 
-public interface Handler<T> {
+public interface TelegramEventHandler<T> {
     void handle(T update);
 }

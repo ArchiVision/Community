@@ -8,8 +8,9 @@ public enum Reply {
     MAN("Хлопець"),
     GIRL("Дівчина"),
     OTHER("Інше"),
-    LIKE("➕"),
-    DISLIKE("➖");
+    LIKE("+"),
+    DISLIKE("-"),
+    SETTINGS("settings");
 
     private final String replyOption;
     Reply(String replyOption) {

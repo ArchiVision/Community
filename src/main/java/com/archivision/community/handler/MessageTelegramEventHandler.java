@@ -14,7 +14,7 @@ import java.util.Map;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class MessageHandler implements Handler<Message> {
+public class MessageTelegramEventHandler implements TelegramEventHandler<Message> {
     private final Map<String, MessageStrategy> strategyMap;
 
     public void handle(Message message) {

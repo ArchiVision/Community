@@ -1,7 +1,7 @@
 package com.archivision.community.service;
 
-import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
+import com.archivision.community.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,13 +15,16 @@ public class NotificationService {
     private final ProfileSender profileSender;
 
     public void notifyUsersAboutMatch(Long likerId, Long likedId) {
-        User likerUser = userService.getUserByTgId(likerId);
-        User likedUser = userService.getUserByTgId(likedId);
-
-        messageSender.sendTextMessage(likedId, "У вас симпатія! @"+likerUser.getUsername());
+        messageSender.sendTextMessage(likedId, "У вас симпатія! @" +
+                userService.getUserByTgId(likerId).getUsername());
         profileSender.showUserProfileTo(likerId, likedId);
 
-        messageSender.sendTextMessage(likerId, "У вас симпатія! @"+likedUser.getUsername());
+        messageSender.sendTextMessage(likerId, "У вас симпатія! @" +
+                userService.getUserByTgId(likedId).getUsername());
         profileSender.showUserProfileTo(likedId, likerId);
+    }
+
+    public void notifyUserAboutSuccessfulPayment(String chatId, String message) {
+        messageSender.sendTextMessage(Long.valueOf(chatId), message);
     }
 }

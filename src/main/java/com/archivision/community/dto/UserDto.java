@@ -1,6 +1,6 @@
 package com.archivision.community.dto;
 
-import com.archivision.community.bot.State;
+import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.entity.Gender;
 import lombok.Data;
 
@@ -19,6 +19,6 @@ public class UserDto {
     private Gender lookingFor;
     private String photoId;
     private Long age;
-    private State state;
+    private UserFlowState userFlowState;
     private List<TopicDto> topics = new ArrayList<>();
 }
