@@ -1,11 +1,10 @@
 package com.archivision.community.state.impl.initial;
 
 import com.archivision.community.bot.UserFlowState;
-import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
-import com.archivision.community.dto.UserDto;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
+import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
@@ -21,17 +20,18 @@ public class NameInputStateHandler extends AbstractStateHandler {
     private static final String ERROR_NAME = "Щось не так з ім'ям. Спробуй ще раз";
 
     public NameInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                                 KeyboardBuilderService keyboardBuilder, ActiveRegistrationProcessCache registrationProcessCache) {
-        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
+                                 KeyboardBuilderService keyboardBuilder, UserCache userCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, userCache);
     }
 
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
-        UserDto user = registrationProcessCache.getCurrentUser(chatId);
         String messageText = message.getText();
-        user.setUserFlowState(AGE);
-        user.setName(messageText);
+        userCache.processUser(chatId, userDto -> {
+            userDto.setUserFlowState(AGE);
+            userDto.setName(messageText);
+        });
         messageSender.sendTextMessage(chatId, ResponseTemplate.AGE_INPUT);
     }
 

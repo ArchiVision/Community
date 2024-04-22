@@ -1,12 +1,11 @@
 package com.archivision.community.state.impl.initial;
 
 import com.archivision.community.bot.UserFlowState;
-import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
-import com.archivision.community.dto.UserDto;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.TelegramImageS3Service;
+import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
@@ -26,16 +25,15 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
 
     public PhotoInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
                                   KeyboardBuilderService keyboardBuilder, TelegramImageS3Service imageS3Service,
-                                  ActiveRegistrationProcessCache registrationProcessCache) {
-        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
+                                  UserCache userCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, userCache);
         this.imageS3Service = imageS3Service;
     }
 
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
-        UserDto user = registrationProcessCache.getCurrentUser(chatId);
-        user.setPhotoId(TelegramImageS3Service.generateUserAvatarKey(chatId));
+        userCache.processUser(chatId, userDto -> userDto.setPhotoId(TelegramImageS3Service.generateUserAvatarKey(chatId)));
         imageS3Service.uploadImageToStorage(chatId, getFileId(message));
         goToApprovalState(chatId);
     }
@@ -75,7 +73,7 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
     }
 
     private void goToApprovalState(Long chatId) {
-        registrationProcessCache.getCurrentUser(chatId).setUserFlowState(APPROVE);
+        userCache.processUser(chatId, userDto -> userDto.setUserFlowState(APPROVE));
         messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.APPROVE_INPUT, keyboardBuilder.approvalButtons());
     }
 

@@ -1,12 +1,11 @@
 package com.archivision.community.state.impl.initial;
 
 import com.archivision.community.bot.UserFlowState;
-import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.TopicDto;
-import com.archivision.community.dto.UserDto;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
+import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.state.OptionalState;
@@ -24,16 +23,15 @@ import static com.archivision.community.bot.UserFlowState.DESCRIPTION;
 public class TopicsInputStateHandler extends AbstractStateHandler implements OptionalState {
 
     public TopicsInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                                   KeyboardBuilderService keyboardBuilderService, ActiveRegistrationProcessCache registrationProcessCache) {
-        super(inputValidator, userService, messageSender, keyboardBuilderService, registrationProcessCache);
+                                   KeyboardBuilderService keyboardBuilderService, UserCache userCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilderService, userCache);
     }
 
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
-        UserDto user = registrationProcessCache.getCurrentUser(chatId);
         String messageText = message.getText();
-        user.getTopics().add(new TopicDto().setName(messageText));
+        userCache.processUser(chatId, userDto -> userDto.getTopics().add(new TopicDto().setName(messageText)));
         log.info("topic={}", messageText);
         messageSender.sendMsgWithMarkup(chatId, "Ще одну тему?", keyboardBuilder.button("Завершити"));
     }
@@ -72,7 +70,7 @@ public class TopicsInputStateHandler extends AbstractStateHandler implements Opt
     @Override
     public void changeToNextState(Long chatId) {
         NextStateData nextState = getNextState();
-        registrationProcessCache.getCurrentUser(chatId).setUserFlowState(nextState.userFlowState());
+        userCache.processUser(chatId, userDto -> userDto.setUserFlowState(nextState.userFlowState()));
         messageSender.sendNextStateData(chatId, nextState);
     }
 

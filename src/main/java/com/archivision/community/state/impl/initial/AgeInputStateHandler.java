@@ -1,11 +1,11 @@
 package com.archivision.community.state.impl.initial;
 
 import com.archivision.community.bot.UserFlowState;
-import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
+import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
@@ -19,17 +19,18 @@ import static com.archivision.community.bot.UserFlowState.GENDER;
 @Slf4j
 public class AgeInputStateHandler extends AbstractStateHandler {
     public AgeInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                                KeyboardBuilderService keyboardBuilder, ActiveRegistrationProcessCache registrationProcessCache) {
-        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
+                                KeyboardBuilderService keyboardBuilder, UserCache userCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, userCache);
     }
 
     private static final String ERROR_AGE = "Вкажи нормальний вік";
 
     @Override
     public void doHandle(Message message) {
-        UserDto user = registrationProcessCache.getCurrentUser(message.getChatId());
+        UserDto user = userCache.get(message.getChatId());
         user.setAge(Long.valueOf(message.getText()));
         user.setUserFlowState(GENDER);
+        userCache.add(message.getChatId(), user);
         messageSender.sendMsgWithMarkup(message.getChatId(), ResponseTemplate.GENDER_INPUT,
                 keyboardBuilder.genderButtons());
     }

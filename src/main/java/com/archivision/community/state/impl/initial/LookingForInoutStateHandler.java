@@ -1,12 +1,11 @@
 package com.archivision.community.state.impl.initial;
 
 import com.archivision.community.bot.UserFlowState;
-import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
-import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.Gender;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
+import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
@@ -20,8 +19,8 @@ import java.util.Set;
 @Slf4j
 public class LookingForInoutStateHandler extends AbstractStateHandler  {
     public LookingForInoutStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                                       KeyboardBuilderService keyboardBuilder, ActiveRegistrationProcessCache registrationProcessCache) {
-        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
+                                       KeyboardBuilderService keyboardBuilder, UserCache userCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, userCache);
     }
 
     private static final Set<String> options = Set.of("Хлопців", "Дівчат", "Все одно");
@@ -29,10 +28,11 @@ public class LookingForInoutStateHandler extends AbstractStateHandler  {
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
-        UserDto user = registrationProcessCache.getCurrentUser(chatId);
         String messageText = message.getText();
-        user.setUserFlowState(UserFlowState.CITY);
-        user.setLookingFor(Gender.fromString(messageText));
+        userCache.processUser(chatId, userDto -> {
+            userDto.setUserFlowState(UserFlowState.CITY);
+            userDto.setLookingFor(Gender.fromString(messageText));
+        });
         messageSender.sendTextMessage(chatId, ResponseTemplate.CITY_INPUT);
     }
 

@@ -1,10 +1,10 @@
 package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.UserFlowState;
-import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.model.Reply;
-import com.archivision.community.service.*;
+import com.archivision.community.service.KeyboardBuilderService;
+import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserInteractionService;
 import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toSet;
 
 @Component
 @Slf4j
@@ -25,9 +25,9 @@ public class MatchStateHandler extends AbstractStateHandler implements WithReply
     private final UserInteractionService userInteractionService;
 
     public MatchStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                             KeyboardBuilderService keyboardBuilder, ActiveRegistrationProcessCache registrationProcessCache,
+                             KeyboardBuilderService keyboardBuilder, UserCache userCache,
                              UserInteractionService userLikeService) {
-        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
+        super(inputValidator, userService, messageSender, keyboardBuilder, userCache);
         this.userInteractionService = userLikeService;
     }
 
