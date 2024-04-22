@@ -19,10 +19,11 @@ public class PhotoMessageStrategy implements MessageStrategy {
     @Override
     public void handleMessage(Message message) {
         Long chatId = message.getChatId();
-        userCache.processUser(chatId, userDto -> {
-            if (ifNotInPhotoState(userDto)) return;
-            stateManagerService.manageOtherStates(userDto.getUserFlowState(), message);
-        });
+        UserDto userDto = userCache.get(chatId);
+        if (ifNotInPhotoState(userDto)) {
+            return;
+        }
+        stateManagerService.manageOtherStates(userDto.getUserFlowState(), message);
     }
 
     private static boolean ifNotInPhotoState(UserDto user) {
