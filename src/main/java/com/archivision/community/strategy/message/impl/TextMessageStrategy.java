@@ -11,6 +11,7 @@ import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.model.FilterResult;
 import com.archivision.community.service.StateManagerService;
 import com.archivision.community.service.ServiceCommandChecker;
+import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserService;
 import com.archivision.community.strategy.message.MessageStrategy;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class TextMessageStrategy implements MessageStrategy {
     private final UserService userService;
     private final MessageSender messageSender;
     private final StateManagerService stateManagerService;
-    private final ActiveRegistrationProcessCache registrationProcessCache;
+    private final UserCache userCache;
     private final ServiceCommandChecker filterService;
 
     @Override
@@ -46,11 +47,10 @@ public class TextMessageStrategy implements MessageStrategy {
             return;
         }
 
-        Optional<UserDto> optionalUserDto = registrationProcessCache.get(chatId);
-        if (optionalUserDto.isEmpty()) {
+        UserDto userDto = userCache.get(chatId);
+        if (userDto == null) {
             registerIfNeeded(chatId, message);
         } else {
-            UserDto userDto = optionalUserDto.get();
             stateManagerService.manageOtherStates(userDto.getUserFlowState(), message);
         }
     }
@@ -69,7 +69,7 @@ public class TextMessageStrategy implements MessageStrategy {
         userDto.setUserFlowState(UserFlowState.NAME);
         userDto.setTelegramUserId(chatId);
         userDto.setUsername(username);
-        registrationProcessCache.put(userDto);
+        userCache.add(chatId, userDto);
     }
 
     @Override

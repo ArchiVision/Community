@@ -1,11 +1,11 @@
 package com.archivision.community.state.impl.initial;
 
 import com.archivision.community.bot.UserFlowState;
-import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
+import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.util.InputValidator;
@@ -19,8 +19,8 @@ import static com.archivision.community.bot.UserFlowState.TOPIC;
 @Slf4j
 public class CityInputStateHandler extends AbstractStateHandler {
     public CityInputStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
-                                 KeyboardBuilderService keyboardBuilderService, ActiveRegistrationProcessCache registrationProcessCache) {
-        super(inputValidator, userService, messageSender, keyboardBuilderService, registrationProcessCache);
+                                 KeyboardBuilderService keyboardBuilderService, UserCache userCache) {
+        super(inputValidator, userService, messageSender, keyboardBuilderService, userCache);
     }
 
     private static final String ERROR_CITY = "Такого міста не існує або ми ще його не додали. Сорі :(";
@@ -28,10 +28,11 @@ public class CityInputStateHandler extends AbstractStateHandler {
     @Override
     public void doHandle(Message message) {
         Long chatId = message.getChatId();
-        UserDto user = registrationProcessCache.getCurrentUser(chatId);
+        UserDto user = userCache.get(chatId);
         String messageText = message.getText();
         user.setUserFlowState(TOPIC);
         user.setCity(messageText);
+        userCache.add(chatId, user);
         messageSender.sendMsgWithMarkup(message.getChatId(), ResponseTemplate.TOPICS_INPUT,
                 keyboardBuilder.skipButton());
     }

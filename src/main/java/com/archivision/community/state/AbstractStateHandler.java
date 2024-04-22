@@ -1,8 +1,8 @@
 package com.archivision.community.state;
 
-import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
+import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserService;
 import com.archivision.community.util.InputValidator;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ public abstract class AbstractStateHandler implements StateHandler, Validatable 
     protected final UserService userService;
     protected final MessageSender messageSender;
     protected final KeyboardBuilderService keyboardBuilder;
-    protected final ActiveRegistrationProcessCache registrationProcessCache;
+    protected final UserCache userCache;
 
     public void handle(Message message) {
         if (shouldValidateInput()) {

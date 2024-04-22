@@ -1,10 +1,10 @@
 package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.UserFlowState;
-import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.SubscriptionService;
+import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserService;
 import com.archivision.community.state.AbstractStateHandler;
 import com.archivision.community.state.Validatable;
@@ -17,8 +17,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 @Slf4j
 @Component
 public class SettingsStateHandler extends AbstractStateHandler implements Validatable {
-    public SettingsStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender, KeyboardBuilderService keyboardBuilder, ActiveRegistrationProcessCache registrationProcessCache, SubscriptionService subscriptionService) {
-        super(inputValidator, userService, messageSender, keyboardBuilder, registrationProcessCache);
+    public SettingsStateHandler(InputValidator inputValidator,
+                                UserService userService,
+                                MessageSender messageSender,
+                                KeyboardBuilderService keyboardBuilder,
+                                UserCache userCache,
+                                SubscriptionService subscriptionService) {
+        super(inputValidator, userService, messageSender, keyboardBuilder, userCache);
         this.subscriptionService = subscriptionService;
     }
 
