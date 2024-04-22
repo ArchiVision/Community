@@ -1,12 +1,10 @@
 package com.archivision.community.strategy.message.impl;
 
 import com.archivision.community.bot.UserFlowState;
-import com.archivision.community.cache.ActiveRegistrationProcessCache;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.command.UserCommands;
 import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.User;
-import com.archivision.community.mapper.UserMapper;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.model.FilterResult;
 import com.archivision.community.service.StateManagerService;
