@@ -24,7 +24,7 @@ spring:
       username: admin
       password: admin123
     redis:
-      url: redis://localhost:6379
+      url: redis://redis:6379
   datasource:
     url: jdbc:postgresql://localhost:5432/community
     username: postgres
