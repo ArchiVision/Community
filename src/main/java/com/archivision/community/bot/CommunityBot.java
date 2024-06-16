@@ -19,12 +19,6 @@ public class CommunityBot extends TelegramLongPollingBot {
     @Setter
     private UpdateProcessor updateProcessor;
 
-    @PostConstruct
-    public void init() {
-        log.info("Bot username: {}", tgUsername);
-        log.info("Bot token: {}", tgToken);
-    }
-
     @Override
     public void onUpdateReceived(Update update) {
         updateProcessor.processUpdate(update);
