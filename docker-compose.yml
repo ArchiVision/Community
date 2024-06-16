@@ -15,15 +15,33 @@ services:
     volumes:
       - ./redis-data:/data
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=alex
+      - RABBITMQ_DEFAULT_PASS=alex
+
   app:
     image: 'docker-spring-boot-postgres:latest'
     build:
       context: .
     container_name: app
+    ports:
+      - "8080:8080"
     depends_on:
       - redis
+      - rabbitmq
+      - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
       - SPRING_DATASOURCE_USERNAME=compose-postgres
       - SPRING_DATASOURCE_PASSWORD=compose-postgres
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=alex
+      - SPRING_RABBITMQ_PASSWORD=alex

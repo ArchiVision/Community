@@ -1,7 +1,7 @@
 telegram:
   bot:
-    username: .
-    token: .
+    username: communitystagebot
+    token: 7483072284:AAEKReYVUKfbCu8i1kQHZW7IuV_W-ejMkCY
 
 community:
   likes-queue: like-events
