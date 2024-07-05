@@ -24,7 +24,7 @@ public class AWSConfig {
     public S3AsyncClient s3AsyncClient() {
         return S3AsyncClient.crtBuilder()
                 .credentialsProvider(credentials())
-                .region(Region.EU_CENTRAL_1)
+                .region(Region.EU_NORTH_1)
                 .targetThroughputInGbps(20.0)
                 .minimumPartSizeInBytes(2L * 1_048_576)
                 .build();
