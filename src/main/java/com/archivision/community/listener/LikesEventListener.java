@@ -15,6 +15,8 @@ public class LikesEventListener {
 
     @RabbitListener(queues = "like-events")
     public void handleLike(LikeEvent likeEvent) {
+        // TODO: Change to one like -> one match
+        notificationService.notifyPersonAboutLine(likeEvent);
         if (userLikeService.isReverseLikeExists(likeEvent.liker(), likeEvent.liked())) {
             notificationService.notifyUsersAboutMatch(likeEvent.liker(), likeEvent.liked());
         }

@@ -1,6 +1,9 @@
 package com.archivision.community.service;
 
 import com.archivision.community.bot.CommunityBot;
+import com.archivision.community.exception.UnableSendMessageException;
+import com.archivision.community.exception.UnableToExecuteBotCommandException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,10 +19,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-// TODO: 03.09.2023 refactor service
-
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class TelegramImageS3Service {
     @Value("${amazon.s3.bucket-name}")
     private String avatarsBucketName;
@@ -28,11 +30,6 @@ public class TelegramImageS3Service {
     private static final String PICTURE_PATH = "uploads/photos/";
     @Value("#{resourceLoaderService.getDefaultImage()}")
     private byte[] defaultImageBytes;
-
-    public TelegramImageS3Service(CommunityBot communityBot, S3Service s3Service) {
-        this.communityBot = communityBot;
-        this.s3Service = s3Service;
-    }
 
     /**
      *
@@ -44,34 +41,28 @@ public class TelegramImageS3Service {
         s3Service.uploadFileAsBytes(avatarsBucketName, generateUserAvatarKey(chatId), bytes);
     }
 
-    /**
-     *
-     * @param chatId user's chat id. Will be used to generate key to get it from S3 bucket
-     */
-    public void sendImageOfUserToUser(Long userId, Long toUser, boolean hasPhoto) {
-        sendImageOfUserToUser(userId, toUser, hasPhoto, null);
-    }
-
     public void sendImageOfUserToUser(Long userId, Long toUser, boolean hasPhoto, String caption) {
-        String pictureKey = generateUserAvatarKey(userId);
+        final String pictureKey = generateUserAvatarKey(userId);
+
         byte[] image = defaultImageBytes;
         if (hasPhoto) {
             image = s3Service.downloadFileAsBytes(avatarsBucketName, pictureKey);
         }
+
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setChatId(toUser);
         if (caption != null) {
             sendPhoto.setCaption(caption);
         }
+
         InputFile inputFile = new InputFile();
-        InputStream inputStream = new ByteArrayInputStream(image);
-        inputFile.setMedia(inputStream, PICTURE_PATH + pictureKey);
+        inputFile.setMedia(new ByteArrayInputStream(image), PICTURE_PATH + pictureKey);
         sendPhoto.setPhoto(inputFile);
+
         try {
             communityBot.execute(sendPhoto);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-            // TODO: 17.07.2023 custom exception
+            throw new UnableSendMessageException("Failed send photo", e);
         }
     }
 
@@ -82,8 +73,7 @@ public class TelegramImageS3Service {
         try {
             execute = communityBot.execute(getFileRequest);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-            // TODO: 17.07.2023 custom exception
+            throw new UnableToExecuteBotCommandException("Failed to resolve file by id", e);
         }
         return downloadFileByFilePath(execute.getFilePath());
     }
@@ -98,17 +88,13 @@ public class TelegramImageS3Service {
                 byteStream.write(dataBuffer, 0, bytesRead);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
-            // TODO: 17.07.2023 custom exception
+            throw new UnableToExecuteBotCommandException("Failed to resolve file by path", e);
         }
         return byteStream.toByteArray();
     }
 
-    public static String generateUserAvatarKey(String userId) {
-        return "avatars_" + userId + ".jpg";
-    }
 
     public static String generateUserAvatarKey(Long userId) {
-        return generateUserAvatarKey(String.valueOf(userId));
+        return "avatars_" + userId + ".jpg";
     }
 }

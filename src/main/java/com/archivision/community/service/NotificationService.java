@@ -1,5 +1,6 @@
 package com.archivision.community.service;
 
+import com.archivision.community.event.LikeEvent;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +27,15 @@ public class NotificationService {
 
     public void notifyUserAboutSuccessfulPayment(String chatId, String message) {
         messageSender.sendTextMessage(Long.valueOf(chatId), message);
+    }
+
+    public void notifyPersonAboutLine(LikeEvent likeEvent) {
+        final Long whoIsLiked = likeEvent.liked();
+        final Long liker = likeEvent.liker();
+
+        messageSender.sendTextMessage(whoIsLiked, "У вас вподобання від @" +
+                userService.getUserByTgId(liker).getUsername());
+
+        profileSender.showUserProfileTo(liker, whoIsLiked);
     }
 }
