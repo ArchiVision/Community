@@ -7,6 +7,19 @@ community:
   likes-queue: like-events
   payment-queue: payment-events
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+
 spring:
   app:
     rabbit:
