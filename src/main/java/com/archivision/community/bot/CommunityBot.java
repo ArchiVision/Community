@@ -1,7 +1,6 @@
 package com.archivision.community.bot;
 
 import com.archivision.community.processor.UpdateProcessor;
-import jakarta.annotation.PostConstruct;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

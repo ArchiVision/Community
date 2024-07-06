@@ -16,11 +16,4 @@ public interface ResponseTemplate {
     String APPROVE_INPUT = "Нічого не забув, все вірно?";
     String GENDER_INPUT = "Гендер";
     String LOOKING_FOR_INPUT = "Кого шукаєте?";
-    String YOUR_PROFILE = """
-            %s, %s, %s
-            
-            Теми: %s
-            
-            Опис: %s
-            """;
 }
