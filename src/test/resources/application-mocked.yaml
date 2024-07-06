@@ -1,0 +1,53 @@
+telegram:
+  bot:
+    username: mock
+    token: mock
+
+community:
+  likes-queue: like-events
+  payment-queue: payment-events
+
+spring:
+  app:
+    rabbit:
+      like-event-queue-name: like-events
+      payment-event-queue-name: payment-events
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: mydatabase
+      username: mock
+      password: mock
+    redis:
+      url: redis://redis:6379
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  rabbitmq:
+    username: mock
+    password: mock
+
+amazon:
+  s3:
+    access-key: .
+    secret-key: .
+    bucket-name: .
+
+logging:
+  level:
+    root: info
+server:
+  port: 8080
+
+paypal:
+  client:
+    id: .
+    secret: .
+    mode: sandbox

@@ -31,11 +31,8 @@ public class NotificationService {
 
     public void notifyPersonAboutLine(LikeEvent likeEvent) {
         final Long whoIsLiked = likeEvent.liked();
-        final Long liker = likeEvent.liker();
 
-        messageSender.sendTextMessage(whoIsLiked, "У вас вподобання від @" +
-                userService.getUserByTgId(liker).getUsername());
-
-        profileSender.showUserProfileTo(liker, whoIsLiked);
+        messageSender.sendTextMessage(whoIsLiked, "У вас вподобання!");
+        profileSender.showUserProfileTo(likeEvent.liker(), whoIsLiked);
     }
 }

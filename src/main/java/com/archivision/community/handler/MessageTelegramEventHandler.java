@@ -18,9 +18,10 @@ public class MessageTelegramEventHandler implements TelegramEventHandler<Message
     private final Map<String, MessageStrategy> strategyMap;
 
     public void handle(Message message) {
-        log.info("New message={} from={}. Delegating message to appropriate handler..", message, message.getFrom());
+        log.info("Message: messageId: {}, userId: {}, text: {}", message.getMessageId(), message.getFrom().getId(), message.getText());
+
         for (String strategyKey : strategyMap.keySet()) {
-            MessageStrategy strategy = strategyMap.get(strategyKey);
+            final MessageStrategy strategy = strategyMap.get(strategyKey);
             if (strategy.supports(message)) {
                 strategy.handleMessage(message);
                 return;

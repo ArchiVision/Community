@@ -20,7 +20,7 @@ public class PaymentEventListener {
 
     @RabbitListener(queues = "payment-events")
     public void handleSuccessPayment(PaymentEvent event) {
-        String chatId = redisTemplate.opsForValue().getAndDelete(event.paymentId());
+        final String chatId = redisTemplate.opsForValue().getAndDelete(event.paymentId());
         userService.changeSubscription(chatId, User.Subscription.VIP);
         notificationService.notifyUserAboutSuccessfulPayment(chatId, "Успішний платіж!");
     }
