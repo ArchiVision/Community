@@ -37,7 +37,7 @@ build/
 /rabbit-data/
 
 # Ignore the logs directory
-logs/
+logs/community.log
 *.log
 
 # Ignore the Docker volumes
