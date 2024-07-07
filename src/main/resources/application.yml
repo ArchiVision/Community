@@ -39,12 +39,12 @@ spring:
     redis:
       url: redis://redis:6379
   datasource:
-    url: jdbc:postgresql://localhost:5432/community
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://db:5432/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASS}
   rabbitmq:
-    username: alex
-    password: alex
+    username: ${RABBIT_USER}
+    password: ${RABBIT_USER}
 
 amazon:
   s3:
@@ -55,6 +55,8 @@ amazon:
 logging:
   level:
     root: info
+  file:
+    name: logs/community.log
 server:
   port: 8080
 

@@ -34,3 +34,46 @@ build/
 /data/
 /postgres-data/
 /redis-data/
+/rabbit-data/
+
+# Ignore the logs directory
+logs/community.log
+*.log
+
+# Ignore the Docker volumes
+volumes/
+redis-data/
+
+# Ignore environment variable files
+.env
+*.env
+
+# Ignore IntelliJ IDEA project files
+.idea/
+
+# Ignore Node.js modules
+node_modules/
+# Ignore temporary files
+*.swp
+*.temp
+
+# Ignore Spring Boot specific files
+*.pid
+
+# Ignore Prometheus data
+prometheus/
+
+# Ignore local configuration files
+local_config.yml
+
+# Ignore compiled Python files
+__pycache__/
+*.py[cod]
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore docker-compose override files
+docker-compose.override.yml
+
