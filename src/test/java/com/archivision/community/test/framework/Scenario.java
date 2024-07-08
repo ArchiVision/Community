@@ -1,6 +1,7 @@
 package com.archivision.community.test.framework;
 
-import com.archivision.community.TestBeansOverrides;
+import com.archivision.community.TestBeansOverride;
+import com.archivision.community.bot.CommunityBot;
 import com.archivision.community.repo.UserRepository;
 import com.archivision.community.test.framework.verification.UserPresenceInDbVerification;
 import com.archivision.community.test.framework.verification.UserPresenceInDbVerificationHandler;
@@ -26,19 +27,18 @@ public class Scenario {
     private final Map<Class<?>, VerificationHandler> verificationHandlers = new ConcurrentHashMap<>();
 
     public static final int POLL_INTERVAL = 50;
-    public static final int POLL_DELAY = 100;
 
     @Getter
     private MeterRegistry meterRegistry;
 
     @Getter
-    private TestBeansOverrides.CommunityBotMock communityBot;
+    private CommunityBot communityBot;
 
     @Getter
     private UserRepository userRepository;
 
     public static Scenario scenario(@NonNull MeterRegistry meterRegistry,
-                                    TestBeansOverrides.CommunityBotMock communityBot,
+                                    CommunityBot communityBot,
                                     UserRepository userRepository) {
 
         final Scenario scenario = new Scenario();
@@ -52,21 +52,12 @@ public class Scenario {
     }
 
     public Scenario sendUpdate(Update update) {
-        communityBot.addUpdate(update);
+        communityBot.onUpdateReceived(update);
         return this;
     }
 
     private static void registerVerificationHandlers(Scenario scenario) {
         scenario.verificationHandlers.put(UserPresenceInDbVerification.class, new UserPresenceInDbVerificationHandler(scenario));
-    }
-
-    private void verify(Verification verification, long timeoutMillis, long waitAtLeast) {
-        final VerificationHandler verificationHandler = verificationHandlers.get(verification.getClass());
-        if (verificationHandler != null) {
-            verificationHandler.handle(verification, timeoutMillis, waitAtLeast);
-        } else {
-            throw new IllegalStateException("No verification handler for class: " + verification.getClass().getCanonicalName());
-        }
     }
 
     public Scenario verify(List<Verification> verifications) {

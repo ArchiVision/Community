@@ -6,7 +6,7 @@ public final class ScenarioFactory {
     public static Scenario scenario(BaseIntegrationTest baseIntegrationTest) {
         return Scenario.scenario(
                 baseIntegrationTest.getMeterRegistry(),
-                baseIntegrationTest.getCommunityBotMock(),
+                baseIntegrationTest.getCommunityBot(),
                 baseIntegrationTest.getUserRepository()
         );
     }
