@@ -1,6 +1,7 @@
 package com.archivision.community.bot;
 
 import com.archivision.community.processor.UpdateProcessor;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +16,9 @@ public class CommunityBot extends TelegramLongPollingBot {
     private String tgUsername;
     @Value("${telegram.bot.token}")
     private String tgToken;
+
     @Setter
+    @Getter
     private UpdateProcessor updateProcessor;
 
     @Override
