@@ -42,13 +42,15 @@ This bot is designed to connect people based on their interests and preferences.
 
     Create a `.env` file in the root directory by the .env-sample one
 
-5. **Get your IPv4 address for prometheus.yml**
-    java -jar ip-resolver.jar
+5. **Get your IPv4 address for prometheus.yml** <br>
+    ```java -jar ip-resolver.jar```
 
-6. **Go to project root directory and run command**
-     ./run-project.sh
+6. **Go to project root directory and run command** <br>
+     ```
+    ./run-project.sh
     if no acccess -> chmod +x run-project.sh
     try again -> ./run-project.sh
+    ```
 
 7. **It should run all containers including monitoring and logging**
 <img width="1410" alt="image" src="https://github.com/ArchiVision/Community/assets/72043323/b510b515-aff7-4267-955e-a4534584a184">
