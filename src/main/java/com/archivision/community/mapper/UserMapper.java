@@ -19,7 +19,6 @@ public class UserMapper {
     private final TopicMapper topicMapper;
     private final TopicRepository topicRepository;
 
-
     public User toEntity(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId() != null ? Long.valueOf(userDto.getId()) : null);
@@ -29,9 +28,10 @@ public class UserMapper {
         user.setDescription(userDto.getDescription());
         user.setAge(userDto.getAge());
         user.setUserFlowState(userDto.getUserFlowState());
+        user.setUserType(userDto.getUserType());
         user.setUsername(userDto.getUsername());
         user.setGender(userDto.getGender());
-        user.setLookingFor(userDto.getLookingFor());
+        user.setLookingFor(userDto.getUserType());
         user.setPhotoId(userDto.getPhotoId());
 
         Set<Topic> attachedTopics = new HashSet<>();

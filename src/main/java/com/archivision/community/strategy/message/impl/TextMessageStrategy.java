@@ -7,6 +7,7 @@ import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.model.FilterResult;
+import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.StateManagerService;
 import com.archivision.community.service.ServiceCommandChecker;
 import com.archivision.community.service.UserCache;
@@ -28,6 +29,7 @@ public class TextMessageStrategy implements MessageStrategy {
     private final StateManagerService stateManagerService;
     private final UserCache userCache;
     private final ServiceCommandChecker filterService;
+    private final KeyboardBuilderService keyboardBuilder;
 
     @Override
     public void handleMessage(Message message) {
@@ -58,13 +60,14 @@ public class TextMessageStrategy implements MessageStrategy {
             log.info("User with telegram id={} not found id DB. Saving.", chatId);
             saveUser(chatId, message.getFrom().getUserName());
             messageSender.sendTextMessage(chatId, ResponseTemplate.START);
-            messageSender.sendTextMessage(chatId, ResponseTemplate.NAME_INPUT);
+            messageSender.sendMsgWithMarkup(message.getChatId(), ResponseTemplate.TYPE_INPUT,
+                    keyboardBuilder.typeButtons());
         }
     }
 
     private void saveUser(Long chatId, String username) {
         UserDto userDto = new UserDto();
-        userDto.setUserFlowState(UserFlowState.NAME);
+        userDto.setUserFlowState(UserFlowState.TYPE);
         userDto.setTelegramUserId(chatId);
         userDto.setUsername(username);
         userCache.add(chatId, userDto);

@@ -3,6 +3,7 @@ package com.archivision.community.state.impl.initial;
 import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.command.ResponseTemplate;
 import com.archivision.community.messagesender.MessageSender;
+import com.archivision.community.model.UserType;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import static com.archivision.community.bot.UserFlowState.AGE;
+import static com.archivision.community.bot.UserFlowState.LOOKING;
 
 @Component
 @Slf4j
@@ -29,10 +31,15 @@ public class NameInputStateHandler extends AbstractStateHandler {
         Long chatId = message.getChatId();
         String messageText = message.getText();
         userCache.processUser(chatId, userDto -> {
-            userDto.setUserFlowState(AGE);
             userDto.setName(messageText);
+            if (userDto.getUserType().equals(UserType.UNIT)) {
+                userDto.setUserFlowState(LOOKING);
+                messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.LOOKING_FOR_INPUT, keyboardBuilder.lookingGenderButtons());
+                return;
+            }
+            userDto.setUserFlowState(AGE);
+            messageSender.sendTextMessage(chatId, ResponseTemplate.AGE_INPUT);
         });
-        messageSender.sendTextMessage(chatId, ResponseTemplate.AGE_INPUT);
     }
 
     @Override

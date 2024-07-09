@@ -9,17 +9,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.archivision.community.model.Reply.CHANGE;
-import static com.archivision.community.model.Reply.GIRL;
-import static com.archivision.community.model.Reply.MAN;
-import static com.archivision.community.model.Reply.OTHER;
-import static com.archivision.community.model.Reply.SKIP;
-import static com.archivision.community.model.Reply.YES;
+import static com.archivision.community.model.Reply.*;
 
 @Component
 @RequiredArgsConstructor
@@ -39,8 +33,12 @@ public class KeyboardBuilderService {
         return multiButtons(true, MAN.toString(), GIRL.toString(), OTHER.toString());
     }
 
+    public ReplyKeyboardMarkup typeButtons() {
+        return multiButtons(true, PERSON.toString(), UNIT.toString());
+    }
+
     public ReplyKeyboardMarkup lookingGenderButtons() {
-        return multiButtons(true, "Хлопців", "Дівчат", "Все одно");
+        return multiButtons(true, "Людей", "Юніти", "Все одно");
     }
 
     public ReplyKeyboardMarkup button(String text) {

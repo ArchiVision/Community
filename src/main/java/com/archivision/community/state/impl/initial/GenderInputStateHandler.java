@@ -2,7 +2,7 @@ package com.archivision.community.state.impl.initial;
 
 import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.command.ResponseTemplate;
-import com.archivision.community.entity.Gender;
+import com.archivision.community.model.Gender;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserCache;

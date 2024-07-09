@@ -1,4 +1,4 @@
-package com.archivision.community.entity;
+package com.archivision.community.model;
 
 import lombok.RequiredArgsConstructor;
 

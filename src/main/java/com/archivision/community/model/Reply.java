@@ -10,6 +10,8 @@ public enum Reply {
     OTHER("Інше"),
     LIKE("+"),
     DISLIKE("-"),
+    UNIT("Юніт"),
+    PERSON("Особа"),
     SETTINGS("settings");
 
     private final String replyOption;
