@@ -57,9 +57,9 @@ spring:
 
 amazon:
   s3:
-    access-key: .
-    secret-key: .
-    bucket-name: .
+    access-key: ${S3_ACCESS_KEY}
+    secret-key: ${S3_SECRET_KEY}
+    bucket-name: ${S3_BUCKET_NAME}
 
 logging:
   level:
