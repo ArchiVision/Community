@@ -4,6 +4,7 @@ import com.archivision.community.bot.BotRegistrar;
 import com.archivision.community.bot.CommunityBot;
 import com.archivision.community.listener.LikesEventListener;
 import com.archivision.community.listener.PaymentEventListener;
+import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.processor.UpdateProcessor;
 import com.archivision.community.repo.UserRepository;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -15,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.telegram.telegrambots.meta.generics.TelegramBot;
 
 @SpringBootTest
@@ -27,6 +27,9 @@ public class BaseIntegrationTest {
     private BotRegistrar botRegistrar;
     @MockBean
     private TelegramBot telegramBot;
+
+    @MockBean
+    private MessageSender messageSender;
 
     @Getter
     @Autowired
