@@ -1,6 +1,5 @@
 package com.archivision.community.test.framework;
 
-import org.checkerframework.checker.units.qual.C;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;

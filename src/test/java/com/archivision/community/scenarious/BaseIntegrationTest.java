@@ -17,12 +17,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.telegram.telegrambots.meta.generics.TelegramBot;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.DockerImageName;
 
 @SpringBootTest
 @ActiveProfiles("mocked")
 @Slf4j
 @DirtiesContext
 public class BaseIntegrationTest {
+    private static final int REDIS_MAPPED_PORT = 6379;
+
     @MockBean
     private BotRegistrar botRegistrar;
     @MockBean
@@ -52,4 +56,11 @@ public class BaseIntegrationTest {
     @Autowired
     @Getter
     protected UserRepository userRepository;
+
+    static {
+        GenericContainer<?> redis =
+                new GenericContainer<>(DockerImageName.parse("redis:6.2.6")).withExposedPorts(REDIS_MAPPED_PORT);
+        redis.start();
+        System.setProperty("spring.data.redis.url", "redis://" + redis.getHost() + ":" + redis.getMappedPort(REDIS_MAPPED_PORT));
+    }
 }

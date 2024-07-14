@@ -7,10 +7,6 @@ import org.springframework.stereotype.Component;
 import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.core.async.AsyncResponseTransformer;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-
-import java.io.File;
-import java.nio.file.Path;
 
 @Component
 @RequiredArgsConstructor
@@ -18,32 +14,13 @@ import java.nio.file.Path;
 public class S3Service {
     private final S3AsyncClient s3Client;
 
-    public void uploadFile(String bucketName, String key, String path) {
-        s3Client.putObject(req -> req.bucket(bucketName)
-                                .key(key),
-                        AsyncRequestBody.fromFile(new File(path)))
-                .join();
-    }
-
     public void uploadFileAsBytes(String bucketName, String key, byte[] bytes) {
-        s3Client.putObject(req -> req.bucket(bucketName)
-                                .key(key),
-                        AsyncRequestBody.fromBytes(bytes))
+        s3Client.putObject(req -> req.bucket(bucketName).key(key), AsyncRequestBody.fromBytes(bytes))
                 .join();
-    }
-
-    public void downloadFile(String bucketName, String key, String destinationPath) {
-        GetObjectResponse getObjectResponse =
-                s3Client.getObject(req -> req.bucket(bucketName)
-                                        .key(key),
-                                AsyncResponseTransformer.toFile(Path.of(destinationPath)))
-                        .join();
     }
 
     public byte[] downloadFileAsBytes(String bucketName, String key) {
-        return s3Client.getObject(req -> req.bucket(bucketName)
-                                .key(key),
-                        AsyncResponseTransformer.toBytes())
+        return s3Client.getObject(req -> req.bucket(bucketName).key(key), AsyncResponseTransformer.toBytes())
                 .join().asByteArray();
     }
 }

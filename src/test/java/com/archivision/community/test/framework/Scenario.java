@@ -1,6 +1,5 @@
 package com.archivision.community.test.framework;
 
-import com.archivision.community.TestBeansOverride;
 import com.archivision.community.bot.CommunityBot;
 import com.archivision.community.repo.UserRepository;
 import com.archivision.community.test.framework.verification.UserPresenceInDbVerification;
@@ -22,11 +21,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 @Slf4j
+/*
+ *  Each command (i.e: sendUpdate()) is executed instantly,
+ *  only for verification command you have to write withTimeout() to be executed
+ */
 public class Scenario {
     private final List<Verification> verifications = new ArrayList<>();
     private final Map<Class<?>, VerificationHandler> verificationHandlers = new ConcurrentHashMap<>();
 
     public static final int POLL_INTERVAL = 50;
+    public static final int POLL_DELAY = 100;
 
     @Getter
     private MeterRegistry meterRegistry;
@@ -74,8 +78,18 @@ public class Scenario {
         return verify(verificationList);
     }
 
-    public <T extends Verification> void registerVerificationHandler(Class<T> verificationClass, VerificationHandler<T> handler) {
-        this.verificationHandlers.put(verificationClass, handler);
+    public Scenario withTimeout(long timeoutMillis) {
+        verifications.forEach(verification -> verify(verification, timeoutMillis, POLL_DELAY));
+        verifications.clear();
+        return this;
     }
 
+    private void verify(Verification verification, long timeoutMillis, long waitAtLeast) {
+        final VerificationHandler verificationHandler = verificationHandlers.get(verification.getClass());
+        if (verificationHandler != null) {
+            verificationHandler.handle(verification, timeoutMillis, waitAtLeast);
+        } else {
+            throw new IllegalStateException("No verification handler for class: " + verification.getClass().getCanonicalName());
+        }
+    }
 }
