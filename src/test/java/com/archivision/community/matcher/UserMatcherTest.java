@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-/**
+/*
  *  Tests for verifying probabilities for matching algorithm
  *  Percentage values are theoretical and should be asserted empirical
- * **/
+ */
 class UserMatcherTest {
     private final double DELTA = 0.001;
     private final UserMatcher userMatcher = new UserMatcher(new LevenshteinAlgorithm());
@@ -93,6 +93,6 @@ class UserMatcherTest {
 
         MatchResult match = userMatcher.match(userA, userB);
         assertNull(match.getMatchingProbability());
-        assertEquals(MatchStatus.UNACCEPTABLE_AGE_DIFFERENCE,match.getMatchStatus());
+        assertEquals(MatchStatus.UNACCEPTABLE_AGE_DIFFERENCE, match.getMatchStatus());
     }
 }

@@ -1,5 +1,8 @@
 package com.archivision.community.entity;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public enum Gender {
     MAN("Хлопець", "Хлопців"),
     WOMAN("Дівчина", "Дівчат"),
@@ -8,11 +11,6 @@ public enum Gender {
 
     private final String genderChoose;
     private final String lookingChoose;
-
-    Gender(String genderChoose, String lookingChoose) {
-        this.genderChoose = genderChoose;
-        this.lookingChoose = lookingChoose;
-    }
 
     public static Gender fromString(String value) {
         for (Gender gender : Gender.values()) {

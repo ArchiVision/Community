@@ -1,6 +1,8 @@
 package com.archivision.community.bot;
 
 import com.archivision.community.processor.UpdateProcessor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,9 @@ public class CommunityBot extends TelegramLongPollingBot {
     private String tgUsername;
     @Value("${telegram.bot.token}")
     private String tgToken;
+
+    @Setter
+    @Getter
     private UpdateProcessor updateProcessor;
 
     @Override
@@ -29,9 +34,5 @@ public class CommunityBot extends TelegramLongPollingBot {
     @Override
     public String getBotToken() {
         return tgToken;
-    }
-
-    public void setUpdateProcessor(UpdateProcessor updateProcessor) {
-        this.updateProcessor = updateProcessor;
     }
 }

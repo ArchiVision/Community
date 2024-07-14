@@ -19,22 +19,6 @@ public class UserMapper {
     private final TopicMapper topicMapper;
     private final TopicRepository topicRepository;
 
-    public UserDto toDto(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId().toString());
-        userDto.setTelegramUserId(user.getTelegramUserId());
-        userDto.setName(user.getName());
-        userDto.setCity(user.getCity());
-        userDto.setDescription(user.getDescription());
-        userDto.setAge(user.getAge());
-        userDto.setUserFlowState(user.getUserFlowState());
-        userDto.setUsername(user.getUsername());
-        userDto.setGender(user.getGender());
-        userDto.setLookingFor(user.getLookingFor());
-        userDto.setPhotoId(userDto.getPhotoId());
-        user.getTopics().forEach(topic -> userDto.getTopics().add(topicMapper.toDto(topic)));
-        return userDto;
-    }
 
     public User toEntity(UserDto userDto) {
         User user = new User();

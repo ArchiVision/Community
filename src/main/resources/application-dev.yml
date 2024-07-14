@@ -27,17 +27,10 @@ spring:
       payment-event-queue-name: payment-events
   jpa:
     hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
+      ddl-auto: create-drop
+    show-sql: true
   flyway:
-    locations: classpath:db/migration
-    enabled: true
-    baseline-version: 1
-    baseline-description: Initial version
-    clean-disabled: true
+    enabled: false
   data:
     mongodb:
       host: localhost
@@ -57,9 +50,9 @@ spring:
 
 amazon:
   s3:
-    access-key: ${S3_ACCESS_KEY}
-    secret-key: ${S3_SECRET_KEY}
-    bucket-name: ${S3_BUCKET_NAME}
+    access-key: .
+    secret-key: .
+    bucket-name: .
 
 logging:
   level:

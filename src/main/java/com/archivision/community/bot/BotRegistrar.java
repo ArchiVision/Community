@@ -14,7 +14,11 @@ public class BotRegistrar {
     public void register(LongPollingBot telegramBot) throws TelegramApiException {
         final TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         try {
-            log.info("Registering bot...");
+            log.info("Registering bot... Username: {}, Token: {}",
+                    telegramBot.getBotUsername(),
+                    telegramBot.getBotToken()
+            );
+
             telegramBotsApi.registerBot(telegramBot);
             log.info("Telegram bot is ready to accept updates from user");
         } catch (TelegramApiRequestException e) {

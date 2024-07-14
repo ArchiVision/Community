@@ -1,0 +1,5 @@
+http.host: "0.0.0.0"
+log.level: debug
+node.name: logstash
+path.config: /usr/share/logstash/pipeline/logstash.conf
+path.logs: /usr/share/logstash/logs

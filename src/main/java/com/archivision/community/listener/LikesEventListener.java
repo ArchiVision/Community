@@ -17,6 +17,8 @@ public class LikesEventListener {
     public void handleLike(LikeEvent likeEvent) {
         if (userLikeService.isReverseLikeExists(likeEvent.liker(), likeEvent.liked())) {
             notificationService.notifyUsersAboutMatch(likeEvent.liker(), likeEvent.liked());
+        } else {
+            notificationService.notifyPersonAboutLine(likeEvent);
         }
     }
 }
