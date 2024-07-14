@@ -1,22 +1,28 @@
 version: '1'
 services:
-  prometheus:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus:/etc/prometheus
-    command:
-      - --config.file=/etc/prometheus/prometheus.yml
-    depends_on:
-      - app
 
-  grafana:
-    image: grafana/grafana
+  app:
+    image: overpathz/communitybot
+    build: .
+    container_name: community-app
     ports:
-      - "3000:3000"
+      - "8080:8080"
     depends_on:
-      - prometheus
+      - redis
+      - rabbitmq
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_RABBITMQ_USERNAME: ${RABBIT_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
+      SPRING_RABBITMQ_HOST: ${RABBIT_HOST}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      SPRING_PROFILES_ACTIVE: prometheus
+    volumes:
+      - ./logs:/app/logs
 
   db:
     image: 'postgres:13.1-alpine'
@@ -45,26 +51,3 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBIT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBIT_PASS}
-
-  app:
-    image: overpathz/communitybot
-    build: .
-    container_name: community-app
-    ports:
-      - "8080:8080"
-    depends_on:
-      - redis
-      - rabbitmq
-      - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME}
-      SPRING_DATASOURCE_USERNAME: ${DB_USER}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_RABBITMQ_USERNAME: ${RABBIT_USER}
-      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
-      SPRING_RABBITMQ_HOST: ${RABBIT_HOST}
-      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-      SPRING_PROFILES_ACTIVE: prometheus
-    volumes:
-      - ./logs:/app/logs

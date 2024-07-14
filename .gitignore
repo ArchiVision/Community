@@ -60,9 +60,6 @@ node_modules/
 # Ignore Spring Boot specific files
 *.pid
 
-# Ignore Prometheus data
-prometheus/
-
 # Ignore local configuration files
 local_config.yml
 

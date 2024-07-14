@@ -40,19 +40,21 @@ This bot is designed to connect people based on their interests and preferences.
 
 4. **Set Environment Variables**
 
-    Create a `.env` file in the root directory and add the following:
+    Create a `.env` file in the root directory by the .env-sample one
 
-    ```env
-    TELEGRAM_BOT_USERNAME=your_bot_username
-    TELEGRAM_BOT_TOKEN=your_bot_token
-    TELEGRAM_BOT_WEBHOOK_PATH=webhook_path
+5. **Get your IPv4 address for prometheus.yml** <br>
+    ```java -jar ip-resolver.jar```
+
+6. **Go to project root directory and run command** <br>
+     ```
+    ./run-project.sh
+    if no acccess -> chmod +x run-project.sh
+    try again -> ./run-project.sh
     ```
 
-5. **Run the Application**
+7. **It should run all containers including monitoring and logging**
+<img width="1410" alt="image" src="https://github.com/ArchiVision/Community/assets/72043323/b510b515-aff7-4267-955e-a4534584a184">
 
-    ```bash
-    mvn spring-boot:run
-    ```
 
 ## Usage
 
