@@ -73,7 +73,13 @@ This bot is designed to connect people based on their interests and preferences.
 - Maven
 - GitHub Actions
 - JUnit
+- Testcontainers
+- Awaitility
+- Grafana
+- ELK
+- Prometheus
 - Docker
+- Flyway
 - Ngrok for building webhooks consumers and test bot without deploying
 
 ## License
