@@ -15,7 +15,8 @@ public enum UserFlowState {
     APPROVE("approve"),
     MATCH("match"),
     PHOTO("photo"),
-    SETTINGS("settings");
+    SETTINGS("settings"),
+    STATS("stats");
 
     private final String value;
     UserFlowState(String value) {
