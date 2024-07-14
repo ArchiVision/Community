@@ -1,4 +1,4 @@
-package com.archivision.community.scenarious;
+package com.archivision.community.test.framework;
 
 import com.archivision.community.bot.BotRegistrar;
 import com.archivision.community.bot.CommunityBot;
