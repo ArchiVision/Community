@@ -49,7 +49,6 @@ public class MatchStateHandler extends AbstractStateHandler implements WithReply
             userService.changeState(chatId, UserFlowState.SETTINGS);
         }
         if (messageText.equals(Reply.STATS.toString())) {
-            // how to trigger execution of another state immediayl (without sending explicit message)
             messageSender.sendMsgWithMarkup(chatId, "Статистика", keyboardBuilder.backButton());
             userService.changeState(chatId, UserFlowState.STATS);
         }

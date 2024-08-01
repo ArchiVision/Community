@@ -36,18 +36,19 @@ public class StatsStateHandler extends AbstractStateHandler implements Validatab
     public void doHandle(Message message) {
         final Long chatId = message.getChatId();
 
-        messageSender.sendTextMessage(chatId, getStatsResponseMessage());
-
         if (message.getText().equals(Reply.BACK.toString())) {
             messageSender.sendTextMessage(chatId, "Повертаємось до анкет");
-
-            // should be returned not to MATCH but to place where all info is ready
             userService.changeState(chatId, UserFlowState.MATCH);
         }
     }
 
     private String getStatsResponseMessage() {
         return String.format(STATS_TEMPLATE, userStatsService.resolveUserPopularityIndex());
+    }
+
+    @Override
+    public void onStateChanged(Long chatId) {
+        messageSender.sendTextMessage(chatId, getStatsResponseMessage());
     }
 
     @Override
