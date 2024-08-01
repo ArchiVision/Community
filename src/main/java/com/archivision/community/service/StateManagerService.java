@@ -21,4 +21,8 @@ public class StateManagerService {
             stateHandler.handle(message);
         }
     }
+
+    public StateHandler getStateHandler(UserFlowState userFlowState) {
+        return statesHandlers.get(userFlowState);
+    }
 }

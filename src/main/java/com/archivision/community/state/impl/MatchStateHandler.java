@@ -4,6 +4,7 @@ import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.messagesender.MessageSender;
 import com.archivision.community.model.Reply;
 import com.archivision.community.service.KeyboardBuilderService;
+import com.archivision.community.service.ProfileSender;
 import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserInteractionService;
 import com.archivision.community.service.user.UserService;
@@ -23,12 +24,14 @@ import static java.util.stream.Collectors.toSet;
 @Slf4j
 public class MatchStateHandler extends AbstractStateHandler implements WithReplyOptions {
     private final UserInteractionService userInteractionService;
+    private final ProfileSender profileSender;
 
     public MatchStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
                              KeyboardBuilderService keyboardBuilder, UserCache userCache,
-                             UserInteractionService userLikeService) {
+                             UserInteractionService userLikeService, ProfileSender profileSender) {
         super(inputValidator, userService, messageSender, keyboardBuilder, userCache);
         this.userInteractionService = userLikeService;
+        this.profileSender = profileSender;
     }
 
     @Override
@@ -80,5 +83,12 @@ public class MatchStateHandler extends AbstractStateHandler implements WithReply
         return Stream.of(Reply.LIKE, Reply.DISLIKE, Reply.SETTINGS)
                 .map(Reply::toString)
                 .collect(toSet());
+    }
+
+    @Override
+    public void onStateChanged(Long chatId) {
+        profileSender.showProfile(chatId);
+        messageSender.sendMsgWithMarkup(chatId, "Пошук", keyboardBuilder.matchButtons());
+        profileSender.sendNextProfile(chatId);
     }
 }

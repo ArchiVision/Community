@@ -29,10 +29,9 @@ public class DescriptionStateHandler extends AbstractStateHandler implements Opt
         Long chatId = message.getChatId();
         String messageText = message.getText();
         userCache.processUser(chatId, userDto -> {
-            userDto.setUserFlowState(PHOTO);
             userDto.setDescription(messageText);
         });
-        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.PHOTO, keyboardBuilder.skipButton());
+        userService.changeState(chatId, PHOTO);
     }
 
     private boolean isAbleToEnterDesc(Long chatId, String messageText) {
@@ -68,8 +67,7 @@ public class DescriptionStateHandler extends AbstractStateHandler implements Opt
     @Override
     public void changeToNextState(Long chatId) {
         NextStateData nextState = getNextState();
-        userCache.processUser(chatId, userDto -> userDto.setUserFlowState(nextState.userFlowState()));
-        messageSender.sendNextStateData(chatId, nextState);
+        userService.changeState(chatId, nextState.userFlowState());
     }
 
     @Override
@@ -80,5 +78,10 @@ public class DescriptionStateHandler extends AbstractStateHandler implements Opt
     @Override
     public boolean shouldValidateInput() {
         return true;
+    }
+
+    @Override
+    public void onStateChanged(Long chatId) {
+        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.DESC_INPUT, keyboardBuilder.skipButton());
     }
 }

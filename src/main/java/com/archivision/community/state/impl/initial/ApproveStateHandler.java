@@ -40,30 +40,14 @@ public class ApproveStateHandler extends AbstractStateHandler {
         Long chatId = message.getChatId();
         String messageText = message.getText();
         if (messageText.equals("Так")) {
-            changeStateToMatch(chatId);
             UserDto userDto = userCache.remove(chatId);
             userService.saveUser(userDto);
-            profileSender.showProfile(chatId);
-            messageSender.sendMsgWithMarkup(chatId, "Пошук", keyboardBuilder.matchButtons());
-            profileSender.sendNextProfile(chatId);
+            userService.changeState(chatId, UserFlowState.MATCH);
         } else if (messageText.equals("Змінити")){
-            changeStateToName(chatId);
+            userService.changeState(chatId, UserFlowState.NAME);
         } else {
             log.error("??");
         }
-    }
-
-    private void changeStateToName(Long chatId) {
-        UserDto user = userCache.get(chatId);
-        user.setUserFlowState(UserFlowState.NAME);
-        userCache.add(chatId, user);
-        messageSender.sendTextMessage(chatId, ResponseTemplate.NAME_INPUT);
-    }
-
-    private void changeStateToMatch(Long chatId) {
-        UserDto user = userCache.get(chatId);
-        user.setUserFlowState(UserFlowState.MATCH);
-        userCache.add(chatId, user);
     }
 
     @Override
@@ -74,5 +58,10 @@ public class ApproveStateHandler extends AbstractStateHandler {
     @Override
     public boolean shouldValidateInput() {
         return false;
+    }
+
+    @Override
+    public void onStateChanged(Long chatId) {
+        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.APPROVE_INPUT, keyboardBuilder.approvalButtons());
     }
 }

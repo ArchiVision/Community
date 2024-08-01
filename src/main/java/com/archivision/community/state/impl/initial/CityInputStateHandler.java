@@ -30,11 +30,10 @@ public class CityInputStateHandler extends AbstractStateHandler {
         Long chatId = message.getChatId();
         UserDto user = userCache.get(chatId);
         String messageText = message.getText();
-        user.setUserFlowState(TOPIC);
-        user.setCity(messageText);
-        userCache.add(chatId, user);
-        messageSender.sendMsgWithMarkup(message.getChatId(), ResponseTemplate.TOPICS_INPUT,
-                keyboardBuilder.skipButton());
+        userCache.processUser(chatId, userDto -> {
+           userDto.setCity(messageText);
+        });
+       userService.changeState(chatId, TOPIC);
     }
 
     @Override
@@ -56,5 +55,10 @@ public class CityInputStateHandler extends AbstractStateHandler {
     @Override
     public boolean shouldValidateInput() {
         return true;
+    }
+
+    @Override
+    public void onStateChanged(Long chatId) {
+        messageSender.sendTextMessage(chatId, ResponseTemplate.CITY_INPUT);
     }
 }

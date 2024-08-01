@@ -73,8 +73,7 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
     }
 
     private void goToApprovalState(Long chatId) {
-        userCache.processUser(chatId, userDto -> userDto.setUserFlowState(APPROVE));
-        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.APPROVE_INPUT, keyboardBuilder.approvalButtons());
+        userService.changeState(chatId, APPROVE);
     }
 
     private String getFileId(Message message) {
@@ -86,5 +85,10 @@ public class PhotoInputStateHandler extends AbstractStateHandler {
             photoSize = photo.get(0);
         }
         return photoSize.getFileId();
+    }
+
+    @Override
+    public void onStateChanged(Long chatId) {
+        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.PHOTO, keyboardBuilder.skipButton());
     }
 }
