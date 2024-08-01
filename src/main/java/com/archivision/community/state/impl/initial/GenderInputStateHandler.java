@@ -30,11 +30,9 @@ public class GenderInputStateHandler extends AbstractStateHandler  {
         Long chatId = message.getChatId();
         String messageText = message.getText();
         userCache.processUser(chatId, userDto -> {
-            userDto.setUserFlowState(UserFlowState.LOOKING);
             userDto.setGender(Gender.fromString(messageText));
         });
-        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.LOOKING_FOR_INPUT,
-                keyboardBuilder.lookingGenderButtons());
+        userService.changeState(chatId, UserFlowState.LOOKING);
     }
 
     @Override
@@ -55,5 +53,11 @@ public class GenderInputStateHandler extends AbstractStateHandler  {
     @Override
     public boolean shouldValidateInput() {
         return true;
+    }
+
+    @Override
+    public void onStateChanged(Long chatId) {
+        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.GENDER_INPUT,
+                keyboardBuilder.genderButtons());
     }
 }

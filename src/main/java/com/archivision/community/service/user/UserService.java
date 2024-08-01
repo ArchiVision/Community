@@ -5,8 +5,12 @@ import com.archivision.community.dto.UserDto;
 import com.archivision.community.entity.User;
 import com.archivision.community.mapper.UserMapper;
 import com.archivision.community.repo.UserRepository;
+import com.archivision.community.service.StateManagerService;
+import com.archivision.community.service.UserCache;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +23,20 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private StateManagerService stateManagerService;
+    private final UserCache userCache;
 
     @Transactional
     public void changeState(Long userId, UserFlowState userUserFlowState) {
-        Optional<User> byId = userRepository.findByTelegramUserId(userId);
-        byId.ifPresentOrElse(user -> user.setUserFlowState(userUserFlowState), () -> log.info("User with id={} not found", userId));
+        userRepository.findByTelegramUserId(userId)
+                .ifPresentOrElse(user -> user.setUserFlowState(userUserFlowState),
+                        () -> userCache.processUser(userId, userDto ->
+                                userDto.setUserFlowState(userUserFlowState)));
+        // log.info("User with id={} not found", userId)
+
+        stateManagerService
+                .getStateHandler(userUserFlowState)
+                .onStateChanged(userId);
     }
 
     public Optional<User> getUserByTelegramId(Long chatId) {
@@ -79,6 +92,11 @@ public class UserService {
         byId.ifPresentOrElse(user -> {
             user.setSubscription(subscription);
         }, () -> log.info("User with id={} not found", chatId));
+    }
+
+    @Autowired
+    public void setStateManagerService(@Lazy StateManagerService stateManagerService) {
+        this.stateManagerService = stateManagerService;
     }
 }
 

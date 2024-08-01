@@ -29,10 +29,9 @@ public class NameInputStateHandler extends AbstractStateHandler {
         Long chatId = message.getChatId();
         String messageText = message.getText();
         userCache.processUser(chatId, userDto -> {
-            userDto.setUserFlowState(AGE);
             userDto.setName(messageText);
         });
-        messageSender.sendTextMessage(chatId, ResponseTemplate.AGE_INPUT);
+        userService.changeState(chatId, AGE);
     }
 
     @Override
@@ -53,5 +52,10 @@ public class NameInputStateHandler extends AbstractStateHandler {
     @Override
     public boolean shouldValidateInput() {
         return true;
+    }
+
+    @Override
+    public void onStateChanged(Long chatId) {
+        messageSender.sendTextMessage(chatId, ResponseTemplate.NAME_INPUT);
     }
 }

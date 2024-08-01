@@ -30,10 +30,9 @@ public class LookingForInoutStateHandler extends AbstractStateHandler  {
         Long chatId = message.getChatId();
         String messageText = message.getText();
         userCache.processUser(chatId, userDto -> {
-            userDto.setUserFlowState(UserFlowState.CITY);
             userDto.setLookingFor(Gender.fromString(messageText));
         });
-        messageSender.sendTextMessage(chatId, ResponseTemplate.CITY_INPUT);
+        userService.changeState(chatId, UserFlowState.CITY);
     }
 
     @Override
@@ -54,5 +53,11 @@ public class LookingForInoutStateHandler extends AbstractStateHandler  {
     @Override
     public boolean shouldValidateInput() {
         return true;
+    }
+
+    @Override
+    public void onStateChanged(Long chatId) {
+        messageSender.sendMsgWithMarkup(chatId, ResponseTemplate.LOOKING_FOR_INPUT,
+                keyboardBuilder.lookingGenderButtons());
     }
 }
