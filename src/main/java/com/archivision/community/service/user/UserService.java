@@ -23,9 +23,7 @@ public class UserService {
     @Transactional
     public void changeState(Long userId, UserFlowState userUserFlowState) {
         Optional<User> byId = userRepository.findByTelegramUserId(userId);
-        byId.ifPresentOrElse(user -> {
-            user.setUserFlowState(userUserFlowState);
-        }, () -> log.info("User with id={} not found", userId));
+        byId.ifPresentOrElse(user -> user.setUserFlowState(userUserFlowState), () -> log.info("User with id={} not found", userId));
     }
 
     public Optional<User> getUserByTelegramId(Long chatId) {

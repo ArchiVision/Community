@@ -2,6 +2,7 @@ package com.archivision.community.state.impl;
 
 import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.messagesender.MessageSender;
+import com.archivision.community.model.Reply;
 import com.archivision.community.service.KeyboardBuilderService;
 import com.archivision.community.service.UserCache;
 import com.archivision.community.service.user.UserService;
@@ -18,6 +19,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class StatsStateHandler extends AbstractStateHandler implements Validatable {
     private final String STATS_TEMPLATE =
             """
+            Stats:
+            
             Popularity index: %s
             """;
 
@@ -33,8 +36,14 @@ public class StatsStateHandler extends AbstractStateHandler implements Validatab
     public void doHandle(Message message) {
         final Long chatId = message.getChatId();
 
-        messageSender.sendMsgWithMarkup(chatId, getStatsResponseMessage(), keyboardBuilder.button("Завершити"));
-        userService.changeState(chatId, UserFlowState.STATS);
+        messageSender.sendTextMessage(chatId, getStatsResponseMessage());
+
+        if (message.getText().equals(Reply.BACK.toString())) {
+            messageSender.sendTextMessage(chatId, "Повертаємось до анкет");
+
+            // should be returned not to MATCH but to place where all info is ready
+            userService.changeState(chatId, UserFlowState.MATCH);
+        }
     }
 
     private String getStatsResponseMessage() {
