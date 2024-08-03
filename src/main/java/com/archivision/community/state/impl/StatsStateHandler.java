@@ -42,13 +42,13 @@ public class StatsStateHandler extends AbstractStateHandler implements Validatab
         }
     }
 
-    private String getStatsResponseMessage() {
-        return String.format(STATS_TEMPLATE, userStatsService.resolveUserPopularityIndex());
+    private String getStatsResponseMessage(Long chatId) {
+        return String.format(STATS_TEMPLATE, userStatsService.resolveUserPopularityIndex(chatId));
     }
 
     @Override
     public void onStateChanged(Long chatId) {
-        messageSender.sendTextMessage(chatId, getStatsResponseMessage());
+        messageSender.sendTextMessage(chatId, getStatsResponseMessage(chatId));
     }
 
     @Override

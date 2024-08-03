@@ -9,6 +9,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class UserLikeService {
         UserLike userLike = new UserLike();
         userLike.setUserId(userId);
         userLike.setLikedUserId(userLikeId);
+        userLike.setDateTime(LocalDateTime.now());
         userLikeRepo.save(userLike);
         LikeEvent likeEvent = new LikeEvent(userId, userLikeId);
         rabbitTemplate.convertAndSend(likesEventQueue, likeEvent);

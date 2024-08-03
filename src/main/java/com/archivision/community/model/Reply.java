@@ -10,8 +10,8 @@ public enum Reply {
     OTHER("Інше"),
     LIKE("+"),
     DISLIKE("-"),
-    SETTINGS("settings"),
-    STATS("stats"),
+    SETTINGS("Налаштування"),
+    STATS("Статистика"),
     BACK("Завершити");
 
     private final String replyOption;

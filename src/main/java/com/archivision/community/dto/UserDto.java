@@ -20,5 +20,7 @@ public class UserDto {
     private String photoId;
     private Long age;
     private UserFlowState userFlowState;
+
+    private Long numberOfViews = 0L;
     private List<TopicDto> topics = new ArrayList<>();
 }

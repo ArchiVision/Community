@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 public class UserLike {
@@ -14,4 +16,5 @@ public class UserLike {
     private Long id;
     private Long userId;
     private Long likedUserId;
+    private LocalDateTime dateTime;
 }

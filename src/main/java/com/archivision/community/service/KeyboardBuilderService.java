@@ -1,5 +1,6 @@
 package com.archivision.community.service;
 
+import com.archivision.community.model.Reply;
 import com.archivision.community.model.Subscription;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -77,7 +78,7 @@ public class KeyboardBuilderService {
     }
 
     public ReplyKeyboardMarkup matchButtons() {
-        return multiButtons(false, "+", "-", "settings", "stats");
+        return multiButtons(false, "+", "-", STATS.toString(), Reply.SETTINGS.toString());
     }
 
     public ReplyKeyboardMarkup subscriptions() {
