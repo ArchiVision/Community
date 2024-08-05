@@ -18,7 +18,7 @@ public class UserStatsService {
         final User user = userRepository.findByTelegramUserId(chatId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        long numberOfLikes = userLikeRepo.countNumberOfLikesForUser(user.getId());
+        long numberOfLikes = userLikeRepo.countNumberOfLikesForUser(user.getTelegramUserId());
         long numberOfViews = user.getNumberOfViews();
 
         log.info("Likes: {}, views: {}", numberOfLikes, numberOfViews);

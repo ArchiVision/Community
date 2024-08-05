@@ -22,6 +22,7 @@ public class UserLikeService {
     private String likesEventQueue;
 
     public void like(Long userId, Long userLikeId) {
+        log.info("test!");
         UserLike userLike = new UserLike();
         userLike.setUserId(userId);
         userLike.setLikedUserId(userLikeId);

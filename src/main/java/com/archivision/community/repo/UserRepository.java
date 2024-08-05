@@ -19,6 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE User u SET u.numberOfViews = u.numberOfViews + 1 WHERE u.id = :userId")
-    void incrementNumberOfViews(@Param("userId") Long userId);
+    @Query("UPDATE User u SET u.numberOfViews = u.numberOfViews + 1 WHERE u.telegramUserId = :chatId")
+    void incrementNumberOfViews(@Param("chatId") Long chatId);
 }
