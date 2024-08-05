@@ -1,5 +1,6 @@
 package com.archivision.community.service;
 
+import com.archivision.community.model.Reply;
 import com.archivision.community.model.Subscription;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -9,17 +10,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.archivision.community.model.Reply.CHANGE;
-import static com.archivision.community.model.Reply.GIRL;
-import static com.archivision.community.model.Reply.MAN;
-import static com.archivision.community.model.Reply.OTHER;
-import static com.archivision.community.model.Reply.SKIP;
-import static com.archivision.community.model.Reply.YES;
+import static com.archivision.community.model.Reply.*;
 
 @Component
 @RequiredArgsConstructor
@@ -30,6 +25,15 @@ public class KeyboardBuilderService {
         return ReplyKeyboardMarkup.builder()
                 .keyboardRow(new KeyboardRow(Collections.singleton(KeyboardButton.builder()
                         .text(SKIP.toString())
+                        .build())))
+                .resizeKeyboard(true)
+                .build();
+    }
+
+    public ReplyKeyboardMarkup backButton() {
+        return ReplyKeyboardMarkup.builder()
+                .keyboardRow(new KeyboardRow(Collections.singleton(KeyboardButton.builder()
+                        .text(BACK.toString())
                         .build())))
                 .resizeKeyboard(true)
                 .build();
@@ -74,7 +78,7 @@ public class KeyboardBuilderService {
     }
 
     public ReplyKeyboardMarkup matchButtons() {
-        return multiButtons(false, "+", "-", "settings");
+        return multiButtons(false, "+", "-", STATS.toString(), Reply.SETTINGS.toString());
     }
 
     public ReplyKeyboardMarkup subscriptions() {

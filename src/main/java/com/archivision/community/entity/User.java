@@ -40,6 +40,7 @@ public class User {
     private UserFlowState userFlowState = UserFlowState.START;
     @Enumerated(EnumType.STRING)
     private Subscription subscription = Subscription.NONE;
+    private Long numberOfViews = 0L;
 
     @ManyToMany(cascade = {PERSIST, MERGE}, fetch = LAZY)
     @JoinTable(

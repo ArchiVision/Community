@@ -48,11 +48,15 @@ public class MatchStateHandler extends AbstractStateHandler implements WithReply
             messageSender.sendMsgWithMarkup(chatId, "Налаштування", keyboardBuilder.subscriptions());
             userService.changeState(chatId, UserFlowState.SETTINGS);
         }
+        if (messageText.equals(Reply.STATS.toString())) {
+            messageSender.sendMsgWithMarkup(chatId, "Статистика", keyboardBuilder.backButton());
+            userService.changeState(chatId, UserFlowState.STATS);
+        }
     }
 
     @Override
     public void onValidationError(Message message) {
-        log.error("Smth went wrong. Message={}", message.getText());
+        log.error("Validation error in state: {}. Message={}", getState(), message.getText());
     }
 
     @Override
@@ -80,7 +84,7 @@ public class MatchStateHandler extends AbstractStateHandler implements WithReply
 
     @Override
     public Set<String> getOptions() {
-        return Stream.of(Reply.LIKE, Reply.DISLIKE, Reply.SETTINGS)
+        return Stream.of(Reply.LIKE, Reply.DISLIKE, Reply.SETTINGS, Reply.STATS)
                 .map(Reply::toString)
                 .collect(toSet());
     }

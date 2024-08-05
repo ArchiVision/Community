@@ -4,6 +4,7 @@ import com.archivision.community.cache.ActiveViewingData;
 import com.archivision.community.entity.Topic;
 import com.archivision.community.entity.User;
 import com.archivision.community.messagesender.MessageSender;
+import com.archivision.community.repo.UserRepository;
 import com.archivision.community.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -24,6 +25,7 @@ public class ProfileSender {
     private final TelegramImageS3Service telegramImageS3Service;
     private final MessageSender messageSender;
     private final ActiveViewingData activeViewingData;
+    private final UserRepository userRepository;
 
     public void showUserProfileTo(Long chatId, Long userTo) {
         User user = userService.getUserByTgIdWithTopics(chatId);
@@ -39,8 +41,10 @@ public class ProfileSender {
     public void sendNextProfile(Long chatId) {
         giveUserPersonList(chatId)
                 .ifPresentOrElse(user -> {
-                    activeViewingData.put(chatId, user.getTelegramUserId());
-                    showUserProfileTo(user.getTelegramUserId(), chatId);
+                    final Long telegramUserId = user.getTelegramUserId();
+                    activeViewingData.put(chatId, telegramUserId);
+                    showUserProfileTo(telegramUserId, chatId);
+                    userRepository.incrementNumberOfViews(telegramUserId);
                 }, () -> messageSender.sendTextMessage(chatId, "Анкети закінчилися :("));
     }
 

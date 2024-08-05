@@ -44,10 +44,10 @@ CREATE TABLE user_topic (
 );
 
 -- Create the user_likes table
-CREATE TABLE user_likes (
+CREATE TABLE user_like (
                             id SERIAL PRIMARY KEY,
                             user_id BIGINT NOT NULL,
                             liked_user_id BIGINT NOT NULL,
-                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                            FOREIGN KEY (liked_user_id) REFERENCES users(id) ON DELETE CASCADE
+                            FOREIGN KEY (user_id) REFERENCES users(telegram_user_id) ON DELETE CASCADE,
+                            FOREIGN KEY (liked_user_id) REFERENCES users(telegram_user_id) ON DELETE CASCADE
 );

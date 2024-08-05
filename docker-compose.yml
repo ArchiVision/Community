@@ -21,6 +21,9 @@ services:
       SPRING_RABBITMQ_HOST: ${RABBIT_HOST}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       SPRING_PROFILES_ACTIVE: prometheus
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
     volumes:
       - ./logs:/app/logs
 

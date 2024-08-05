@@ -33,6 +33,7 @@ public class UserMapper {
         user.setGender(userDto.getGender());
         user.setLookingFor(userDto.getLookingFor());
         user.setPhotoId(userDto.getPhotoId());
+        user.setNumberOfViews(userDto.getNumberOfViews());
 
         Set<Topic> attachedTopics = new HashSet<>();
         userDto.getTopics().forEach(topicDto -> {
