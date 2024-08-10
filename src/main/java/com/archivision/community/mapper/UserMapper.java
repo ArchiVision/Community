@@ -29,9 +29,10 @@ public class UserMapper {
         user.setDescription(userDto.getDescription());
         user.setAge(userDto.getAge());
         user.setUserFlowState(userDto.getUserFlowState());
+        user.setUserType(userDto.getUserType());
         user.setUsername(userDto.getUsername());
         user.setGender(userDto.getGender());
-        user.setLookingFor(userDto.getLookingFor());
+        user.setLookingFor(userDto.getUserType());
         user.setPhotoId(userDto.getPhotoId());
         user.setNumberOfViews(userDto.getNumberOfViews());
 

@@ -43,8 +43,12 @@ public class KeyboardBuilderService {
         return multiButtons(true, MAN.toString(), GIRL.toString(), OTHER.toString());
     }
 
+    public ReplyKeyboardMarkup typeButtons() {
+        return multiButtons(true, PERSON.toString(), UNIT.toString());
+    }
+
     public ReplyKeyboardMarkup lookingGenderButtons() {
-        return multiButtons(true, "Хлопців", "Дівчат", "Все одно");
+        return multiButtons(true, "Людей", "Юніти", "Все одно");
     }
 
     public ReplyKeyboardMarkup button(String text) {

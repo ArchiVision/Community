@@ -2,6 +2,7 @@ package com.archivision.community.dto;
 
 import com.archivision.community.bot.UserFlowState;
 import com.archivision.community.entity.Gender;
+import com.archivision.community.model.UserType;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -16,11 +17,11 @@ public class UserDto {
     private String city;
     private String description;
     private Gender gender;
-    private Gender lookingFor;
+    private UserType lookingFor;
     private String photoId;
     private Long age;
     private UserFlowState userFlowState;
-
+    private UserType userType;
     private Long numberOfViews = 0L;
     private List<TopicDto> topics = new ArrayList<>();
 }

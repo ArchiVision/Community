@@ -1,6 +1,7 @@
 package com.archivision.community.entity;
 
 import com.archivision.community.bot.UserFlowState;
+import com.archivision.community.model.UserType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,7 +34,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @Enumerated(EnumType.STRING)
-    private Gender lookingFor = Gender.ANYONE;
+    private UserType lookingFor;
     private String description;
     private String photoId;
     @Enumerated(EnumType.STRING)
@@ -41,6 +42,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Subscription subscription = Subscription.NONE;
     private Long numberOfViews = 0L;
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 
     @ManyToMany(cascade = {PERSIST, MERGE}, fetch = LAZY)
     @JoinTable(

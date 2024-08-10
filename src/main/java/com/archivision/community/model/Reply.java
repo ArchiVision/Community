@@ -10,6 +10,8 @@ public enum Reply {
     OTHER("Інше"),
     LIKE("+"),
     DISLIKE("-"),
+    UNIT("Юніт"),
+    PERSON("Особа"),
     SETTINGS("Налаштування"),
     STATS("Статистика"),
     BACK("Завершити");

@@ -24,10 +24,11 @@ public class BasicUpdateIntegrationTest extends BaseIntegrationTest {
     public void testFullUserRegistrationFlow() {
         scenario(this)
                 .sendUpdate(UpdateFactory.of(telegramUserId, userName, "/start"))
+                .sendUpdate(UpdateFactory.of(telegramUserId, userName, "Особа"))
                 .sendUpdate(UpdateFactory.of(telegramUserId, userName, "Ярослав"))
                 .sendUpdate(UpdateFactory.of(telegramUserId, userName, "28"))
                 .sendUpdate(UpdateFactory.of(telegramUserId, userName, "Хлопець"))
-                .sendUpdate(UpdateFactory.of(telegramUserId, userName, "Дівчат"))
+                .sendUpdate(UpdateFactory.of(telegramUserId, userName, "Людей"))
                 .sendUpdate(UpdateFactory.of(telegramUserId, userName, "Львів"))
                 .sendUpdate(UpdateFactory.of(telegramUserId, userName, "Пропустити"))
                 .sendUpdate(UpdateFactory.of(telegramUserId, userName, "Пропустити"))

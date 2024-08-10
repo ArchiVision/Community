@@ -7,7 +7,8 @@ public interface ResponseTemplate {
             Введи якомога більше інформації про себе, щоб заматчити схожих до твоїх інтересів людей.
             """;
 
-    String NAME_INPUT = "Твоє ім'я";
+    String TYPE_INPUT = "Вкажіть ваш тип (Юніт - компанія, проєкт, спільнота, etc):";
+    String NAME_INPUT = "Твоє ім'я / назва юніту";
     String CITY_INPUT = "Місто";
     String AGE_INPUT = "Вік";
     String TOPICS_INPUT = "Введи теми, якими ти цікавишся";

@@ -12,7 +12,10 @@ CREATE TYPE userflowstate_enum AS ENUM (
 -- Create the table for Subscription enum
 CREATE TYPE subscription_enum AS ENUM ('VIP', 'PREMIUM', 'NONE');
 
--- Create the users table
+-- Create the table for UserType enum
+CREATE TYPE usertype_enum AS ENUM ('PERSON', 'UNIT', 'ANYONE');
+
+-- Recreate the users table with the updated schema
 CREATE TABLE users (
                        id SERIAL PRIMARY KEY,
                        telegram_user_id BIGINT UNIQUE NOT NULL,
@@ -21,11 +24,12 @@ CREATE TABLE users (
                        city VARCHAR(255),
                        age BIGINT,
                        gender gender_enum,
-                       looking_for gender_enum DEFAULT 'ANYONE',
+                       looking_for usertype_enum DEFAULT 'ANYONE',
                        description TEXT,
                        photo_id VARCHAR(255),
                        user_flow_state userflowstate_enum DEFAULT 'START',
-                       subscription subscription_enum DEFAULT 'NONE'
+                       subscription subscription_enum DEFAULT 'NONE',
+                       user_type usertype_enum DEFAULT 'ANYONE'
 );
 
 -- Create the topics table

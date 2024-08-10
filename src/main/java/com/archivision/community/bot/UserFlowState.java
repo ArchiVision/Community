@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum UserFlowState {
     START("start"),
+    TYPE("type"),
     NAME("name"),
     CITY("city"),
     AGE("age"),
