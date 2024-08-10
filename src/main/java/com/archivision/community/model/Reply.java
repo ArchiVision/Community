@@ -12,7 +12,8 @@ public enum Reply {
     DISLIKE("-"),
     SETTINGS("Налаштування"),
     STATS("Статистика"),
-    BACK("Завершити");
+    BACK("Завершити"),
+    SEARCH("Пошук");
 
     private final String replyOption;
     Reply(String replyOption) {

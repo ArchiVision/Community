@@ -40,7 +40,7 @@ public class TelegramUpdateProcessor implements UpdateProcessor {
 
     private void checkForSpecialUpdates(Update update) {
         if (update.hasMyChatMember()) {
-            ChatMemberUpdated chatMember = update.getMyChatMember();
+            final ChatMemberUpdated chatMember = update.getMyChatMember();
             if (chatMember.getNewChatMember().getStatus().equals("kicked")) {
                 userService.deleteByTgId(chatMember.getFrom().getId());
             }

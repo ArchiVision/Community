@@ -24,7 +24,7 @@ public class StatsStateHandler extends AbstractStateHandler implements Validatab
             Popularity index: %s
             """;
 
-    private UserStatsService userStatsService;
+    private final UserStatsService userStatsService;
 
     public StatsStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
                              KeyboardBuilderService keyboardBuilder, UserCache userCache, UserStatsService userStatsService) {

@@ -26,11 +26,9 @@ public class ServiceCommandChecker {
     }
 
     public FilterResult filter(Message message) {
-        Long chatId = message.getChatId();
-        String text = message.getText();
-        if (commands.contains(text)) {
-            List<Subscription> subscriptionTypes = subscriptionService.getAvailableSubscriptionTypes();
-            messageSender.sendTextMessage(chatId, formMessage(subscriptionTypes));
+        if (commands.contains(message.getText())) {
+            final List<Subscription> subscriptionTypes = subscriptionService.getAvailableSubscriptionTypes();
+            messageSender.sendTextMessage(message.getChatId(), formMessage(subscriptionTypes));
         }
         return FilterResult.builder().processNext(true).message("Success").build();
     }

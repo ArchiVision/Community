@@ -8,7 +8,7 @@ public class InputValidator {
         return !name.isBlank() && !name.isEmpty() && (name.length() <= 20 && name.length() > 2);
     }
 
-    // TODO: 18.07.2023 use city repository to check the city is present in DB
+    // TODO: 18.07.2023 https://github.com/orgs/ArchiVision/projects/3/views/1?pane=issue&itemId=74322188
     public boolean isCityValid(String city) {
         return !city.isBlank() && !city.isEmpty() && (city.length() <= 25 && city.length() >= 4);
     }

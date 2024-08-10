@@ -15,12 +15,14 @@ public class NotificationService {
     private final UserService userService;
     private final ProfileSender profileSender;
 
+    private final static String SYMPATHY = "У вас симпатія! @";
+
     public void notifyUsersAboutMatch(Long likerId, Long likedId) {
-        messageSender.sendTextMessage(likedId, "У вас симпатія! @" +
+        messageSender.sendTextMessage(likedId, SYMPATHY +
                 userService.getUserByTgId(likerId).getUsername());
         profileSender.showUserProfileTo(likerId, likedId);
 
-        messageSender.sendTextMessage(likerId, "У вас симпатія! @" +
+        messageSender.sendTextMessage(likerId, SYMPATHY +
                 userService.getUserByTgId(likedId).getUsername());
         profileSender.showUserProfileTo(likedId, likerId);
     }
@@ -29,7 +31,7 @@ public class NotificationService {
         messageSender.sendTextMessage(Long.valueOf(chatId), message);
     }
 
-    public void notifyPersonAboutLine(LikeEvent likeEvent) {
+    public void notifyPersonAboutLike(LikeEvent likeEvent) {
         final Long whoIsLiked = likeEvent.liked();
 
         messageSender.sendTextMessage(whoIsLiked, "У вас вподобання!");

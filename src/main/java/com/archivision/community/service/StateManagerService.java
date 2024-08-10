@@ -16,7 +16,7 @@ public class StateManagerService {
     private final Map<UserFlowState, StateHandler> statesHandlers;
 
     public void manageOtherStates(UserFlowState userFlowState, Message message) {
-        StateHandler stateHandler = statesHandlers.get(userFlowState);
+        final StateHandler stateHandler = statesHandlers.get(userFlowState);
         if (stateHandler != null) {
             stateHandler.handle(message);
         }

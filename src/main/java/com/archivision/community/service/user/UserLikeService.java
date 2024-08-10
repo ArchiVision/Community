@@ -22,14 +22,13 @@ public class UserLikeService {
     private String likesEventQueue;
 
     public void like(Long userId, Long userLikeId) {
-        log.info("test!");
         UserLike userLike = new UserLike();
         userLike.setUserId(userId);
         userLike.setLikedUserId(userLikeId);
         userLike.setDateTime(LocalDateTime.now());
         userLikeRepo.save(userLike);
-        LikeEvent likeEvent = new LikeEvent(userId, userLikeId);
-        rabbitTemplate.convertAndSend(likesEventQueue, likeEvent);
+
+        rabbitTemplate.convertAndSend(likesEventQueue, new LikeEvent(userId, userLikeId));
     }
 
     public boolean isReverseLikeExists(Long likerId, Long likedId) {

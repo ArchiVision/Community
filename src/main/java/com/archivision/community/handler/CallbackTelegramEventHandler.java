@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 @Slf4j
 public class CallbackTelegramEventHandler implements TelegramEventHandler<CallbackQuery> {
     private final MessageSender messageSender;
+
     public void handle(CallbackQuery callbackQuery) {
         if (callbackQuery.getData().contains("hello_btn")) {
             messageSender.sendMessage(SendMessage.builder()

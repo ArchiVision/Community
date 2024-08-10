@@ -32,7 +32,6 @@ public class UserService {
                 .ifPresentOrElse(user -> user.setUserFlowState(userUserFlowState),
                         () -> userCache.processUser(userId, userDto ->
                                 userDto.setUserFlowState(userUserFlowState)));
-        // log.info("User with id={} not found", userId)
 
         stateManagerService
                 .getStateHandler(userUserFlowState)
@@ -45,12 +44,12 @@ public class UserService {
 
     public User getUserByTgId(Long chatId) {
         return userRepository.findByTelegramUserId(chatId).orElseThrow();
-        // TODO: 03.09.2023 custom exception
+        // TODO: 03.09.2023 https://github.com/orgs/ArchiVision/projects/3/views/1?pane=issue&itemId=74320387
     }
 
     public User getUserByTgIdWithTopics(Long chatId) {
         return userRepository.findByIdWithTopics(chatId).orElseThrow();
-        // TODO: 03.09.2023 custom exception
+        // TODO: 03.09.2023 https://github.com/orgs/ArchiVision/projects/3/views/1?pane=issue&itemId=74320387
     }
 
     public List<User> findAllUsers(){
@@ -88,7 +87,7 @@ public class UserService {
 
     @Transactional
     public void changeSubscription(String chatId, User.Subscription subscription) {
-        Optional<User> byId = userRepository.findByTelegramUserId(Long.valueOf(chatId));
+        final Optional<User> byId = userRepository.findByTelegramUserId(Long.valueOf(chatId));
         byId.ifPresentOrElse(user -> {
             user.setSubscription(subscription);
         }, () -> log.info("User with id={} not found", chatId));

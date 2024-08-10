@@ -18,8 +18,7 @@ public class PhotoMessageStrategy implements MessageStrategy {
     private final UserCache userCache;
     @Override
     public void handleMessage(Message message) {
-        Long chatId = message.getChatId();
-        UserDto userDto = userCache.get(chatId);
+        final UserDto userDto = userCache.get(message.getChatId());
         if (ifNotInPhotoState(userDto)) {
             return;
         }

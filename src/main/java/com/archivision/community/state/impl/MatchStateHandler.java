@@ -15,43 +15,45 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static com.archivision.community.model.Reply.*;
 import static java.util.stream.Collectors.toSet;
 
 @Component
 @Slf4j
 public class MatchStateHandler extends AbstractStateHandler implements WithReplyOptions {
-    private final UserInteractionService userInteractionService;
     private final ProfileSender profileSender;
+    private final Map<String, Consumer<Long>> messageHandlerStrategy;
 
     public MatchStateHandler(InputValidator inputValidator, UserService userService, MessageSender messageSender,
                              KeyboardBuilderService keyboardBuilder, UserCache userCache,
                              UserInteractionService userLikeService, ProfileSender profileSender) {
         super(inputValidator, userService, messageSender, keyboardBuilder, userCache);
-        this.userInteractionService = userLikeService;
         this.profileSender = profileSender;
+
+        this.messageHandlerStrategy = Map.of(
+                LIKE.toString(), userLikeService::handleLikeAction,
+                DISLIKE.toString(), userLikeService::handleDislikeAction,
+                SETTINGS.toString(), chatId -> {
+                    messageSender.sendMsgWithMarkup(chatId, SETTINGS.toString(), keyboardBuilder.subscriptions());
+                    userService.changeState(chatId, UserFlowState.SETTINGS);
+                },
+                STATS.toString(), chatId -> {
+                    messageSender.sendMsgWithMarkup(chatId, STATS.toString(), keyboardBuilder.backButton());
+                    userService.changeState(chatId, UserFlowState.STATS);
+                }
+        );
     }
 
     @Override
     public void doHandle(Message message) {
-        Long chatId = message.getChatId();
-        String messageText = message.getText();
-        if (isLiked(messageText)) {
-            userInteractionService.handleLikeAction(chatId);
-        }
-        if (isDisliked(messageText)) {
-            userInteractionService.handleDislikeAction(chatId);
-        }
-        if (messageText.equals(Reply.SETTINGS.toString())) {
-            messageSender.sendMsgWithMarkup(chatId, "Налаштування", keyboardBuilder.subscriptions());
-            userService.changeState(chatId, UserFlowState.SETTINGS);
-        }
-        if (messageText.equals(Reply.STATS.toString())) {
-            messageSender.sendMsgWithMarkup(chatId, "Статистика", keyboardBuilder.backButton());
-            userService.changeState(chatId, UserFlowState.STATS);
-        }
+        messageHandlerStrategy
+                .get(message.getText())
+                .accept(message.getChatId());
     }
 
     @Override
@@ -74,25 +76,21 @@ public class MatchStateHandler extends AbstractStateHandler implements WithReply
         return true;
     }
 
-    private boolean isLiked(String msg) {
-        return "+".equals(msg);
-    }
-
-    private boolean isDisliked(String msg) {
-        return "-".equals(msg);
-    }
-
     @Override
     public Set<String> getOptions() {
-        return Stream.of(Reply.LIKE, Reply.DISLIKE, Reply.SETTINGS, Reply.STATS)
+        return Stream.of(LIKE, DISLIKE, SETTINGS, STATS)
                 .map(Reply::toString)
                 .collect(toSet());
     }
 
     @Override
     public void onStateChanged(Long chatId) {
+        processBrowsing(chatId);
+    }
+
+    private void processBrowsing(Long chatId) {
         profileSender.showProfile(chatId);
-        messageSender.sendMsgWithMarkup(chatId, "Пошук", keyboardBuilder.matchButtons());
+        messageSender.sendMsgWithMarkup(chatId, SEARCH.toString(), keyboardBuilder.matchButtons());
         profileSender.sendNextProfile(chatId);
     }
 }
