@@ -90,7 +90,7 @@ public class MatchStateHandler extends AbstractStateHandler implements WithReply
 
     private void processBrowsing(Long chatId) {
         profileSender.showProfile(chatId);
-        messageSender.sendMsgWithMarkup(chatId, SEARCH.toString(), keyboardBuilder.matchButtons());
+        messageSender.sendMsgWithMarkup(chatId, "Пошук", keyboardBuilder.matchButtons());
         profileSender.sendNextProfile(chatId);
     }
 }
