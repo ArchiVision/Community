@@ -17,6 +17,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 @Slf4j
 @Component
 public class SettingsStateHandler extends AbstractStateHandler implements Validatable {
+    private final SubscriptionService subscriptionService;
+
     public SettingsStateHandler(InputValidator inputValidator,
                                 UserService userService,
                                 MessageSender messageSender,
@@ -27,18 +29,14 @@ public class SettingsStateHandler extends AbstractStateHandler implements Valida
         this.subscriptionService = subscriptionService;
     }
 
-    private final SubscriptionService subscriptionService;
-
     @Override
     public void doHandle(Message message) {
-        String text = message.getText();
-        Long chatId = message.getChatId();
         log.info("message on settings state");
-        formMarkupBasedOnDonationType(text, chatId);
+        formMarkupBasedOnDonationType(message.getText(), message.getChatId());
     }
 
     private void formMarkupBasedOnDonationType(String subscriptionType, Long chatId) {
-        InlineKeyboardMarkup markup = keyboardBuilder.inlineBtn(subscriptionType, getPaymentUrl(chatId, subscriptionType));
+        final InlineKeyboardMarkup markup = keyboardBuilder.inlineBtn(subscriptionType, getPaymentUrl(chatId, subscriptionType));
         messageSender.sendMsgWithInline(chatId, markup);
 
     }
@@ -64,6 +62,6 @@ public class SettingsStateHandler extends AbstractStateHandler implements Valida
 
     @Override
     public void onValidationError(Message message) {
-
+        log.error("Validation error in state: {}. Message={}", getState(), message.getText());
     }
 }
