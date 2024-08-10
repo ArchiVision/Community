@@ -20,7 +20,6 @@ public class UserRegistrationCache implements UserCache {
         redisTemplate.opsForValue().set(chatId, userDto);
     }
 
-    // only read-only ops
     public UserDto get(Long chatId) {
         return redisTemplate.opsForValue().get(chatId);
     }
@@ -29,7 +28,6 @@ public class UserRegistrationCache implements UserCache {
         return redisTemplate.opsForValue().getAndDelete(chatId);
     }
 
-    // use this
     public void processUser(Long chatId, Consumer<UserDto> dtoConsumer){
         UserDto userDto = get(chatId);
         if (userDto != null) {

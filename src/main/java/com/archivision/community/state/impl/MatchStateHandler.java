@@ -85,6 +85,10 @@ public class MatchStateHandler extends AbstractStateHandler implements WithReply
 
     @Override
     public void onStateChanged(Long chatId) {
+        processBrowsing(chatId);
+    }
+
+    private void processBrowsing(Long chatId) {
         profileSender.showProfile(chatId);
         messageSender.sendMsgWithMarkup(chatId, SEARCH.toString(), keyboardBuilder.matchButtons());
         profileSender.sendNextProfile(chatId);

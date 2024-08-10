@@ -31,21 +31,18 @@ public class TextMessageStrategy implements MessageStrategy {
 
     @Override
     public void handleMessage(Message message) {
-        log.info("public void handleMessage(Message message) , TextMessageStrategy");
-        FilterResult filterResult = filterService.filter(message);
-        if (!filterResult.isProcessNext()) {
+        if (!filterService.filter(message).isProcessNext()) {
             return;
         }
 
-        Long chatId = message.getChatId();
-        Optional<User> optionalDbUser = userService.getUserByTelegramId(chatId);
+        final Long chatId = message.getChatId();
+        final Optional<User> optionalDbUser = userService.getUserByTelegramId(chatId);
         if (optionalDbUser.isPresent()) {
-            User dbUser = optionalDbUser.get();
-            stateManagerService.manageOtherStates(dbUser.getUserFlowState(), message);
+            stateManagerService.manageOtherStates(optionalDbUser.get().getUserFlowState(), message);
             return;
         }
 
-        UserDto userDto = userCache.get(chatId);
+        final UserDto userDto = userCache.get(chatId);
         if (userDto == null) {
             registerIfNeeded(chatId, message);
         } else {

@@ -31,7 +31,6 @@ public class SettingsStateHandler extends AbstractStateHandler implements Valida
 
     @Override
     public void doHandle(Message message) {
-        log.info("message on settings state");
         formMarkupBasedOnDonationType(message.getText(), message.getChatId());
     }
 

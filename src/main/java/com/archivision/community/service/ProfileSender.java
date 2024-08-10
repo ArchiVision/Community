@@ -28,14 +28,16 @@ public class ProfileSender {
     private final UserRepository userRepository;
 
     public void showUserProfileTo(Long chatId, Long userTo) {
-        User user = userService.getUserByTgIdWithTopics(chatId);
-        String formattedProfileText = getFormattedProfileText(user);
+        final User user = userService.getUserByTgIdWithTopics(chatId);
+
         if (Objects.equals(chatId, userTo)) {
             messageSender.sendTextMessage(userTo, "Твоя анкета:");
         }
-        boolean hasPhoto = user.getPhotoId() != null;
-        telegramImageS3Service.sendImageOfUserToUser(chatId, userTo, hasPhoto, formattedProfileText);
-        log.info("showing profile");
+
+        final boolean hasPhoto = user.getPhotoId() != null;
+        telegramImageS3Service.sendImageOfUserToUser(chatId, userTo, hasPhoto, getFormattedProfileText(user));
+
+        log.info("Showing profile");
     }
 
     public void sendNextProfile(Long chatId) {
@@ -51,7 +53,7 @@ public class ProfileSender {
     @SneakyThrows
     private Optional<User> giveUserPersonList(Long chatId) {
         List<User> allUsers = userService.findAllExceptId(chatId);
-        return allUsers.size() > 0 ? Optional.of(allUsers.get(0)) : Optional.empty();
+        return !allUsers.isEmpty() ? Optional.of(allUsers.get(0)) : Optional.empty();
     }
 
     public void showProfile(Long selfChatId) {
@@ -59,15 +61,15 @@ public class ProfileSender {
     }
 
     private String getFormattedProfileText(User user) {
-        String formattedProfileText;
-        formattedProfileText = """
-            %s, %s, %s
-                        
-            Теми: %s
-                        
-            Опис: %s
-            """.formatted(user.getName(), user.getAge(), user.getCity(), formatTopics(user.getTopics()), user.getDescription() == null ? "*пусто*" : user.getDescription());
-        return formattedProfileText;
+        return """
+                %s, %s, %s
+                            
+                Теми: %s
+                            
+                Опис: %s
+                """.formatted(user.getName(), user.getAge(), user.getCity(),
+                formatTopics(user.getTopics()), user.getDescription() == null ? "*пусто*" : user.getDescription()
+        );
     }
 
     private String formatTopics(Set<Topic> topics) {

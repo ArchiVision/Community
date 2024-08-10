@@ -19,8 +19,6 @@ public class UserInteractionService {
     private final ProfileSender profileSender;
 
     public void handleLikeAction(Long chatId) {
-        log.info("Like");
-
         activeViewingData.get(chatId).ifPresent(checkingThisUser -> {
             activeViewingData.remove(chatId);
             userLikeService.like(chatId, checkingThisUser);
@@ -30,8 +28,7 @@ public class UserInteractionService {
     }
 
     public void handleDislikeAction(Long chatId) {
-        log.info("Dislike");
-        // TODO: logic for dislike action
+        // TODO: https://github.com/orgs/ArchiVision/projects/3?pane=issue&itemId=74320337
     }
 }
 

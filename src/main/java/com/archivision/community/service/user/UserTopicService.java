@@ -54,15 +54,14 @@ public class UserTopicService {
 
     @Transactional
     public void removeTopic(Long topicId) {
-        Topic topic = topicRepository.findById(topicId).orElse(null);
+        topicRepository.findById(topicId).ifPresent(this::removeTopicFromAllUsers);
+    }
 
-        if (topic != null) {
-            // Remove the topic from all users
-            for (User user : topic.getUsers()) {
-                user.getTopics().remove(topic);
-            }
-            topicRepository.delete(topic);
+    private void removeTopicFromAllUsers(Topic topic) {
+        for (User user : topic.getUsers()) {
+            user.getTopics().remove(topic);
         }
+        topicRepository.delete(topic);
     }
 }
 

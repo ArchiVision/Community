@@ -20,7 +20,7 @@ public class SubscriptionService {
     private final PayPalService payPalService;
     private final RedisTemplate<String, String> redisTemplate;
 
-    // TODO: 26.01.2024 store in DB
+    // TODO: 26.01.2024 https://github.com/orgs/ArchiVision/projects/3/views/1?pane=issue&itemId=74322041
     public List<Subscription> getAvailableSubscriptionTypes() {
         List<Subscription> subscriptions = new ArrayList<>();
 
@@ -52,7 +52,7 @@ public class SubscriptionService {
                 return link.getHref();
             }
         }
-        // TODO: 26.01.2024 better handling
+        // TODO: 26.01.2024 https://github.com/orgs/ArchiVision/projects/3/views/1?pane=issue&itemId=74322057
         return null;
     }
 }
